@@ -1,0 +1,31 @@
+#!/vendor/bin/sh
+
+[ -f /vendor/bin/maintainer ] && . /vendor/bin/maintainer
+
+LOG_TAG="halo-status"
+
+if ! [ -z ${2} ]; then
+   POD=${2}
+fi
+
+if ! [ -z ${1} ]; then
+   version=$(get_version_info)
+   msg=$(tojson -d "#updateStatus: ${1};;@version: ${version}")
+   tmp=$(mktemp -p ${WORKDIR} "curl.XXXXXX")
+   hubsvc_curl --dump-header ${tmp} -H "Content-Type: application/json" \
+                                 -X PATCH -d "${msg}" "https://${POD}/api/v1/asset/asset"
+   ret=${?}
+   if [ $halo_log_level_debug -le halo_log_level ]; then
+       halo_log_debug $LOG_TAG "$(basename ${0}) ${1} [${ret}]"
+       while IFS= read -r line
+       do
+           halo_log_debug $LOG_TAG "$line"
+       done < "$tmp"
+   fi
+
+   rm -f ${tmp}
+   exit ${ret}
+else
+   halo_log_error $LOG_TAG "Status to send to asset services must be provided"
+   exit 1
+fi

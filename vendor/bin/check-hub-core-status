@@ -1,0 +1,31 @@
+#!/vendor/bin/sh
+
+HALO_PATH=/vendor/bin
+[ -f ${HALO_PATH}/halo_common_lib.sh ] && . ${HALO_PATH}/halo_common_lib.sh
+
+HUB_CORE_CONN_STAT=${HALO_DATA_DIR}/var/run/hub-core/conn_state
+
+get_connection_state() {
+    local state=`cat ${HUB_CORE_CONN_STAT} | jq -r '.currentConnectionState'`
+
+    if [ -n $state ]; then
+        echo "$state"
+    else
+        echo "unknown"
+    fi
+}
+
+main() {
+    local status=`getprop init.svc.vendor.halo-hub-core`
+
+    [ "$status" ] || status=unknown
+
+    if [ "$status" = "running" ]; then
+         get_connection_state
+    else
+        echo "$status"
+    fi
+}
+
+main $@
+

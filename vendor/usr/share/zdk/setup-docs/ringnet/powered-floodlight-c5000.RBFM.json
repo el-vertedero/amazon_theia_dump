@@ -1,0 +1,39 @@
+{
+   "root": {
+      "general": {
+         "name": "Powered Floodlight",
+         "deviceType": "switch.multilevel.beams",
+         "fingerprint": "ring-beams-c5000",
+         "catalogId": "313f1c7d-277e-4ae3-9fa2-f6c36d525bcd"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "powered",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "unlimitedTurnOnDuration",
+               "version": "1.0"
+            }
+         ],
+         "defaultAutoShutoff": 30,
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 127,
+         "minMotionSensitivity": 255,
+         "defaultLightSensorEnabled": true,
+         "defaultLightSensorThreshold": 80,
+         "defaultTurnOnDuration": 0,
+         "defaultMotionDwellTime": 20,
+         "defaultDuskToDawn": "not-supported"
+      }
+   }
+}

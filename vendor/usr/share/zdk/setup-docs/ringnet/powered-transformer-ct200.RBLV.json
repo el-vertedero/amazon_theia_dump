@@ -1,0 +1,32 @@
+{
+   "root": {
+      "general": {
+         "name": "Powered Transformer",
+         "deviceType": "switch.transformer.beams",
+         "fingerprint": "ring-beams-ct200",
+         "catalogId": "e1a7a315-71da-4b13-99aa-c29304bbe9f6"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "powered",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "unlimitedTurnOnDuration",
+               "version": "1.0"
+            }
+         ],
+         "defaultTurnOnDuration": 0,
+         "defaultDuskToDawn": "not-supported"
+      }
+   }
+}

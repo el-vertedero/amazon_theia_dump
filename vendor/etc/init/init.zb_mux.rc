@@ -1,0 +1,19 @@
+on post-fs-data
+    mkdir /data/vendor/zigbee 0770 system system
+    chown system system /vendor/dsr/zigbee
+    chown system system /vendor/dsr/zigbee/rfs_file_path_config
+    chown system system /vendor/dsr/zigbee/mntfs_file_path_config
+    chown system system /vendor/dsr/zigbee/ramfs_file_path_config
+
+service zb_mux /vendor/bin/zb_mux -i /dev/spidev32761.0 -s -m 0 \
+        -o 0:/data/vendor/zigbee/ttyOpenThread \
+        -o 2:/data/vendor/zigbee/ttyZigbee \
+        -I /sys/class/gpio/gpio366 \
+        -C /sys/class/gpio/gpio334 \
+        -R /sys/class/rfkill/rfkill1/state \
+        -t 2:0x100800
+    class hal
+    user system
+    group system net_admin
+    disabled
+

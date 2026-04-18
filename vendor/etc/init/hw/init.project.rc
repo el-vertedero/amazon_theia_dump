@@ -1,0 +1,126 @@
+# MTK project .rc configure
+import /vendor/etc/init/hw/init.mdump.rc
+import /vendor/etc/init/hw/init.coredump.rc
+
+# Import WHA
+import init.whad_cc.rc
+
+on init
+    mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
+    mkdir /storage/usbotg 0700 root root
+
+on boot
+    write /proc/sys/vm/min_free_kbytes 32768
+    chown system system /sys/devices/platform/gpio-privacy/state
+    chown system system /sys/devices/platform/gpio-privacy/enable
+
+on post-fs-data
+
+#Camera
+    chmod 0660 /dev/MAINAF
+    chown system camera /dev/MAINAF
+
+    chmod 0660 /dev/MAINAF2
+    chown system camera /dev/MAINAF2
+
+    chmod 0660 /dev/SUBAF
+    chown system camera /dev/SUBAF
+
+    chmod 0660 /dev/GAF001AF
+    chown system camera /dev/GAF001AF
+
+    chmod 0660 /dev/DW9714AF
+    chown system camera /dev/DW9714AF
+
+    chmod 0660 /dev/LC898212AF
+    chown system camera /dev/LC898212AF
+
+    chmod 0660 /dev/BU64745GWZAF
+    chown system camera /dev/BU64745GWZAF
+
+#SMB
+    chown system system /proc/smb/ScreenComm
+    chmod 0660 /proc/smb/ScreenComm
+
+    chmod 0660 /dev/spm
+    chown system system /dev/spm
+
+# AmazonLedBrightnessController
+    chown system system /sys/class/pwm/pwmchip0/pwm0/duty_cycle
+
+    # Create directory for audio data used by prebuilt application
+    mkdir /data/vendor/amzn_audio/ 770 audioserver audio
+
+service hdmi /system/bin/hdmi
+        class main
+        user system
+        group system net_admin inet
+
+on init
+    # silent ota
+    chown system system /sys/class/leds/lcd-backlight/silent
+
+    # Refer to http://source.android.com/devices/tech/storage/index.html
+    # It said, "Starting in Android 4.4, multiple external storage devices are surfaced to developers through
+    #           Context.getExternalFilesDirs(), Context.getExternalCacheDirs(), and Context.getObbDirs().
+    #           External storage devices surfaced through these APIs must be a semi-permanent part of the device (such as an SD card slot in a battery compartment).
+    #           Developers expect data stored in these locations to be available over long periods of time."
+    # Therefore, if the target doesn't support sd hot-plugging (Ex: the SD card slot in a battery compartment), we need to export SECONDARY_STORAGE in 'boot' section
+    #
+    # export SECONDARY_STORAGE /storage/sdcard1
+    export DOWNLOAD_CACHE /cache
+
+service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usbotg /storage/usbotg
+    class late_start
+    disabled
+
+# CABC
+on property:vendor.hwc.video_mode=1
+    write /sys/devices/platform/mtkfb@0/backlight_mode "mov"
+
+on property:vendor.hwc.video_mode=0
+    write /sys/devices/platform/mtkfb@0/backlight_mode "off"
+
+# Top-off mode
+on property:vendor.battery_charging_cv_level=1
+    write /sys/devices/platform/charger/top_off_mode 1
+
+on property:vendor.battery_charging_cv_level=0
+    write /sys/devices/platform/charger/top_off_mode 0
+
+#touch gesture wakeup
+on property:vendor.touch_gesture_wakeup=1
+    write /sys/touchscreen/link_input_dev/gesture_wakeup 1
+on property:vendor.touch_gesture_wakeup=0
+    write /sys/touchscreen/link_input_dev/gesture_wakeup 0
+
+# Update the dm-verity state to partition.*.verified properties
+on post-fs-data
+    verity_update_state
+
+# The following change requires that the corresponding change be made in the
+# device's system.prop file, and is required because "ip_local_reserved_ports"
+# is too long. Additional ephemeral port reservations should be added to the
+# ip_loc_res_ports var in the system.prop
+on property:vendor.sysctl.ip_loc_res_ports=*
+    write /proc/sys/net/ipv4/ip_local_reserved_ports ${vendor.sysctl.ip_loc_res_ports}
+
+# mount nvcfg differently based on property value
+on post-fs-data && property:ro.boot.mnt_nvcfg_rw_opts=rw
+    mount_all /vendor/etc/fstab.mount_nvcfg.rw
+on post-fs-data && property:ro.boot.mnt_nvcfg_rw_opts=ro
+    mount_all /vendor/etc/fstab.mount_nvcfg.ro
+
+# Import perfmonitord
+import init.perfmonitord.rc
+
+# Import perfrecoveryd
+import init.perfrecoveryd.rc
+
+# Set KSM parameters and enable it
+on property:sys.boot_completed=1
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
+
+import /vendor/etc/init/hw/init.ksm.rc

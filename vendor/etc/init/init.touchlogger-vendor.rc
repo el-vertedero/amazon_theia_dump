@@ -1,0 +1,9 @@
+on post-fs-data
+    start touchlogger
+
+service touchlogger /vendor/bin/touchlogger
+    class main
+    user input
+    group input
+    oom_score_adjust 500
+    disabled

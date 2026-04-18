@@ -1,0 +1,41 @@
+{
+   "root": {
+      "general": {
+         "name": "Battery Steplight",
+         "deviceType": "switch.multilevel.beams",
+         "fingerprint": "ring-beams-c40",
+         "catalogId": "16d4f022-f7ac-4c5c-8c0c-53beba5970f8"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "battery",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "customBrightness",
+               "version": "1.0"
+            }
+         ],
+         "defaultAutoShutoff": 30,
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 127,
+         "minMotionSensitivity": 255,
+         "defaultLightSensorEnabled": true,
+         "defaultLightSensorThreshold": 80,
+         "defaultBrightness": 1.0,
+         "defaultTurnOnDuration": 60,
+         "defaultMotionDwellTime": 20,
+         "defaultDuskToDawn": "enabled",
+         "defaultScheduleBrightness": 0.0039216
+      }
+   }
+}

@@ -1,0 +1,10 @@
+on post-fs-data
+    start rm_zboss_logs
+
+service rm_zboss_logs /vendor/bin/rm_zboss_logs.sh
+    user system
+    group system
+    oneshot
+    disabled
+    seclabel u:r:rm_zboss_logs:s0
+

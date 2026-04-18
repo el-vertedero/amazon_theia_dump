@@ -1,0 +1,86 @@
+{
+   "root": {
+      "general": {
+         "name": "Outdoor Smart Plug",
+         "deviceType": "device.beams",
+         "fingerprint": "ring-beams-cp100",
+         "catalogId": "1be1a409-1d1e-44a9-b34e-1ab05380593f",
+         "tags": ["unremovable", "hidden"]
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "powered",
+               "version": "1.0"
+            }
+         ],
+         "componentsCount": 2
+      }
+   },
+   "1": {
+      "general": {
+         "name": "Outdoor Smart Plug Outlet",
+         "deviceType": "switch.beams",
+         "fingerprint": "ring-beams-cp100",
+         "catalogId": "1be1a409-1d1e-44a9-b34e-1ab05380593f"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "powered",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "unlimitedTurnOnDuration",
+               "version": "1.0"
+            }
+         ],
+         "defaultTurnOnDuration": 0,
+         "defaultDuskToDawn": "not-supported",
+         "componentId": "Outlet A",
+         "componentIndex": 1,
+         "preservesInfiniteTurnOnInDfu": true
+      }
+   },
+   "2": {
+      "general": {
+         "name": "Outdoor Smart Plug Outlet",
+         "deviceType": "switch.beams",
+         "fingerprint": "ring-beams-cp100",
+         "catalogId": "1be1a409-1d1e-44a9-b34e-1ab05380593f"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "powered",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "unlimitedTurnOnDuration",
+               "version": "1.0"
+            }
+         ],
+         "defaultTurnOnDuration": 0,
+         "defaultDuskToDawn": "not-supported",
+         "componentId": "Outlet B",
+         "componentIndex": 2,
+         "preservesInfiniteTurnOnInDfu": true
+      }
+   }
+}

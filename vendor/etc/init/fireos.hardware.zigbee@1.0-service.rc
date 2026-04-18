@@ -1,0 +1,16 @@
+
+# Copyright (c) 2020 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+# ZigbeeHIDL uses group net_admin because ZigbeeHIDL accesses
+# zigbeeHAL API which in turn writes to /sys/class/rfkill nodes.
+# The rfkill kernel driver checks for capability CAP_NET_ADMIN
+# and only processes possessing CAP_NET_ADMIN can write to rfkill.
+# Otherwise return with errno "Operation not permitted". Group net_admin
+# makes ZigbeeHIDL inherit CAP_NET_ADMIN
+service zigbee-1-0 /vendor/bin/hw/fireos.hardware.zigbee@1.0-service
+    class hal
+    user system
+    group system net_admin
+    disabled

@@ -1,0 +1,14 @@
+{
+   "root": {
+      "general": {
+         "name": "Beams Light Group",
+         "deviceType": "group.light-group.beams"
+      },
+      "protocol": {
+        "defaultAutoShutoff": 30,
+        "defaultBrigtness" : 1.0,
+        "defaultTurnOnDuration" : 60,
+        "defaultSnoozeDuration" : 3600
+      }
+   }
+}

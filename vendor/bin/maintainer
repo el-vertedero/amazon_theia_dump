@@ -1,0 +1,187 @@
+#!/vendor/bin/sh
+
+HALO_PATH=/vendor/bin
+[ -f ${HALO_PATH}/halo_common_lib.sh ] && . ${HALO_PATH}/halo_common_lib.sh
+
+# defaults file for this platform
+[ -f ${HALO_DATA_DIR}/etc/maintainer/config ] && . ${HALO_DATA_DIR}/etc/maintainer/config
+[ -d ${HALO_DATA_DIR}/etc/maintainer/config.d ] && for f in $(find ${HALO_DATA_DIR}/etc/maintainer/config.d -name "*.conf"); do source $f; done
+
+LOG_TAG="halo-provision"
+
+[ -z $serial ] && serial=`fwenv serial`
+[ -z $regcode ] && regcode=`fwenv regcode`
+[ -z $authtoken ] && authtoken=`fwenv authtoken`
+
+if [ -z ${authtoken} ]; then
+   authtoken=${regcode}
+fi
+
+if [ "${PAIRING}" = true ]; then
+   export MAINT_REASON=pairing
+   unset PAIRING
+fi
+
+get_version_info()
+{
+   app_version=`getprop ro.build.version.incremental` ||  echo "1.1.1.1"
+   echo $app_version
+}
+
+vers=$(get_version_info)
+useragent="${serial};${vers}"
+
+ENCODED_AUTH_TOKEN=$(echo -n "${serial}:${authtoken}" | base64)
+BASIC_AUTH_HEADER="Authorization: Basic ${ENCODED_AUTH_TOKEN}"
+ZASSET_AUTH_HEADER="Authorization: z-asset ${ENCODED_AUTH_TOKEN}"
+USER_AGENT_HEADER="User-Agent: ${useragent}"
+
+curl="curl --ciphers ${CIPHER_LIST} ${CURL_EXTRA_OPTIONS} --fail --silent -u ${serial}:${authtoken} --user-agent ${useragent}"
+hubsvc_curl() {
+   curl --ciphers ${CIPHER_LIST} ${CURL_EXTRA_OPTIONS} --fail --silent --user-agent "${useragent}" --header "${ZASSET_AUTH_HEADER}" "$@"
+}
+
+# The reason 'curl2' is here is that original '${curl}' definition uses '--fail' switch to fail
+# if HTTP response code >= 400. Unfortunatelly, this prevents curl to print HTTP headers from
+# server response (assuming '--verbose' switch provided) in such a cases.
+#
+# Those headers contain valueable info and are needed for debugging.
+#
+# 'curl2' workarounds this issue by not implying '--fail' and mimic it's behavior instead.
+__curl2_impl()
+{
+  local output=$(mktemp -p ${WORKDIR} "curl.XXXXXX")
+  local curl_dump="curl --ciphers ${CIPHER_LIST} ${CURL_EXTRA_OPTIONS} "$@" --write-out '%{http_code}' --output $output"
+  halo_log_debug $LOG_TAG "$curl_dump"
+  local http_code=$(curl --ciphers ${CIPHER_LIST} ${CURL_EXTRA_OPTIONS} "$@" --write-out '%{http_code}' --output $output)
+  local curl_res=$?
+
+  # Use stdout to 'return' string from the function.
+  cat < $output
+  rm -f $output
+
+  # From curl man: 22 HTTP page not retrieved. The requested url was not found or returned another error with
+  # the HTTP error code being 400 or above. This return code only appears if -f, --fail is used. So, handle
+  # this case manually, because --fail suppresses the useful output.
+  if [ $http_code -ge 400 ]; then
+     return 22
+  else
+     return $curl_res
+  fi
+}
+
+# Use output=$(${curl2}) to get returned data.
+curl2=__curl2_impl
+
+check_hostname()
+{
+    #   nslookup "$*" > /dev/null 2>&1
+    echo "$*"
+}
+
+get_world()
+{
+   WORLD=$DEF_WORLD
+
+   if [ -f ${HALO_DATA_DIR}/etc/maintainer/world ]; then
+      world=$(cat ${HALO_DATA_DIR}/etc/maintainer/world)
+      [ "$world" != "" ] && WORLD=$world || rm -f ${HALO_DATA_DIR}/etc/maintainer/world
+   fi
+}
+
+update_world()
+{
+   get_world
+
+   world=$(hubsvc_curl "https://${WORLD}/api/v2/hub/maint/world")
+   rc=$?
+   if [ "$rc" != "0" ]; then
+      echo "world call failed ($rc)..."
+      return 1
+   fi
+   if [ -z "${world}" ]; then
+      echo "world not found for this hub..."
+      return 2
+   elif [ "$world" != "$WORLD" ] && check_hostname "$world"; then
+      echo "updating world file..."
+      echo "$world" > ${HALO_DATA_DIR}/etc/maintainer/world
+   fi
+
+   WORLD=$world
+}
+
+get_pod()
+{
+
+   if [ -f ${HALO_DATA_DIR}/etc/maintainer/pod  ]; then
+      POD=$(cat ${HALO_DATA_DIR}/etc/maintainer/pod)
+   else
+	if ! pod=$(hubsvc_curl "https://${WORLD}/api/v2/hub/maint/pod"); then
+	    echo "pod call failed..."
+	    return 1
+	fi
+	if [ -z "${pod}" ]; then
+	    echo "pod not found for this hub..."
+	    return 2
+	elif [ "$pod" != "$POD" ] && check_hostname "$pod"; then
+	    echo "updating pod file..."
+	    echo "$pod" > ${HALO_DATA_DIR}/etc/maintainer/pod
+	fi
+	POD=$pod
+   fi
+}
+
+update_pod()
+{
+   get_pod
+
+   if ! pod=$(hubsvc_curl "https://${WORLD}/api/v2/hub/maint/pod"); then
+      echo "pod call failed..."
+      return 1
+   fi
+
+   if [ -z "${pod}" ]; then
+      echo "pod not found for this hub..."
+      return 2
+   elif [ "$pod" != "$POD" ] && check_hostname "$pod"; then
+      echo "updating pod file..."
+      echo "$pod" > ${HALO_DATA_DIR}/etc/maintainer/pod
+   fi
+
+   POD=$pod
+}
+
+get_ras_type()
+{
+   if [ -f ${HALO_DATA_DIR}/etc/maintainer/ras-type ]; then
+      RAS_TYPE=$(cat ${HALO_DATA_DIR}/etc/maintainer/ras-type)
+   else
+      RAS_TYPE="ras"
+   fi
+}
+
+run_extra_script()
+{
+   vers=$(get_version_info)
+   phase=$1
+
+   tmpfile=$(mktemp -t extra.XXXXXX)
+   hubsvc_curl --output ${tmpfile} "https://${WORLD}/api/v2/hub/maint/extra?version=${vers}&phase=${phase}"
+
+   [ -f ${tmpfile} ] && /system/bin/sh ${tmpfile}
+   rm -f ${tmpfile}
+}
+
+send_error_code()
+{
+   hubsvc_curl --header "Accept: application/maintainer" \
+           --connect-timeout 10 --max-time 30 \
+           "https://${WORLD}/api/v2/hub/maint/error?where=${1}&why=${2}"
+}
+
+# APT stuff
+apt_opts="-o Acquire::https::User-Agent=${useragent} -o Dpkg::Options::=--force-confnew"
+
+get_world
+get_pod
+get_ras_type

@@ -1,0 +1,30 @@
+#!/vendor/bin/sh
+#
+# Copyright © 2017-2019 Bot Home Automation, Inc. All Rights Reserved.
+#
+
+#
+# Copyright © 2016-2019 Zonoff, Inc.  All Rights Reserved.
+#
+
+if [ -z "$1" ]
+then
+    echo "no command argument (1) is passed"
+    exit 1
+fi
+
+case "$1" in
+    timezone)
+        if [ -z "$2" ]
+        then
+            echo "no timezone argument (2) is passed"
+            exit 1
+        fi
+        setprop persist.vendor.halo.timezone $2
+        exit 0
+        ;;
+    gettimezone)
+        echo "$(getprop persist.vendor.halo.timezone)"
+        exit 0
+        ;;
+esac

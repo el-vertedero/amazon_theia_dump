@@ -1,0 +1,9 @@
+on post-fs-data
+    # change sensor_config.json owner/group
+    chown system:system /vendor/etc/sensor_config.json
+
+    # TODO: delete them after EVT
+    # calibration files should be set with correct permissions in factory
+    chown system:system /mnt/vendor/nvcfg/sensor
+    chown system:system /mnt/vendor/nvcfg/sensor/als_cal.json
+    chown system:system /mnt/vendor/nvcfg/sensor/display_chameleon_cal.json

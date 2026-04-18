@@ -1,0 +1,43 @@
+{
+   "root": {
+      "general": {
+         "name": "Battery Mailbox Sensor",
+         "deviceType": "motion-sensor.beams",
+         "fingerprint": "ring-beams-pluto-rev2",
+         "catalogId": "7ff181a8-068e-46c6-adf3-f37cf391d319"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "battery",
+               "version": "1.0"
+            }
+         ],
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 127,
+         "minMotionSensitivity": 255,
+         "defaultMotionDwellTime": 20,
+         "lightSensorProvided": false,
+         "defaultDuskToDawn": "not-supported",
+         "antennaSwitchEnabled": true,
+         "lastMotionFaultTrackingEnabled": true,
+         "events": {
+            "motion-fault": {
+               "impulse": {
+                  "groupMember": {
+                     "device": {
+                        "suffix": "mailbox"
+                     },
+                     "group": {
+                        "suffix": "mailbox"
+                     }
+                  },
+                  "standalone": {
+                     "suffix": "mailbox"
+                  }
+               }
+            }
+         }
+      }
+   }
+}

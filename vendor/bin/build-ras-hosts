@@ -1,0 +1,67 @@
+#!/vendor/bin/sh
+
+OPTS=`getopts -o c:o:d:u --long conf:,output:,dns:,update -n 'parse-options' -- "$@"`
+eval set -- "$OPTS"
+
+RASCONF=/mnt/halo/etc/hub-core.conf.d/80_ras-hosts.conf
+RASHOSTS=/mnt/halo/run/ras-hosts
+DNS=8.8.8.8
+
+update_hosts=0
+
+while true; do
+   case "$1" in
+      -c | --conf )   RASCONF=$2; shift 2 ;;
+      -o | --output ) RASHOSTS=$2; shift 2 ;;
+      -d | --dns )    DNS=$2; shift 2 ;;
+      -u | --update ) update_hosts=1; shift ;;
+      -- ) shift; break ;;
+      * ) exit 1 ;;
+  esac
+done
+
+DNSLIST="$(grep '^nameserver' /etc/resolv.conf | awk '{ print $2 }') $DNS"
+
+lookup_host()
+{
+   host=${1} ; shift
+   for d in ${DNSCACHE} "${@}"; do
+      addr=$(nslookup $host $d | fgrep -v $d | awk '/Address 1:/ { print $3 }')
+      if [ -n "${addr}" ]; then
+         echo -e "$addr\t$h"
+         DNSCACHE=$d
+         break
+      fi
+   done
+}
+
+build_ras_hosts()
+{
+   list=$(grep 'hosts =' ${RASCONF} | sed -e 's/^.*{\(.*\)}.*$/\1/' | tr ',' '\n' | tr -d '"')
+   for h in $list; do
+      lookup_host $h ${DNSLIST}
+   done
+}
+
+update_etc_hosts()
+{
+cat << EOF > /etc/hosts
+127.0.0.1	localhost.localdomain		localhost
+
+# entries generated from ras list
+$(cat ${RASHOSTS})
+EOF
+}
+
+tmp=$(mktemp)
+
+build_ras_hosts | sort -u > $tmp
+
+if ! cmp -s ${RASHOSTS} ${tmp}; then
+   echo "new ras list detected"
+   mv ${tmp} ${RASHOSTS}
+fi
+
+[ $update_hosts -eq 1 ] && update_etc_hosts
+
+rm -f $tmp

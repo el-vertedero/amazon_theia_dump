@@ -1,0 +1,4 @@
+service aal-2-0 /vendor/bin/hw/vendor.mediatek.hardware.aal@2.0-service
+    class main
+    user system
+    group system graphics

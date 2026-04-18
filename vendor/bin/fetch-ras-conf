@@ -1,0 +1,40 @@
+#!/vendor/bin/sh
+#
+# Copyright © 2017 Bot Home Automation, Inc. All Rights Reserved.
+#
+# specify PATH so we don't run into problems when automating stuff
+#PATH=/sbin:/bin:/usr/sbin:/usr/bin
+LOG=/data/vendor/halo/var/log/zservice/fetch-ras-conf.log
+
+RASCONF=/mnt/halo/etc/hub-core.conf.d/80_ras-hosts.conf
+
+[ -f /vendor/bin/zlogger-exec ] && . /vendor/bin/zlogger-exec -f ${LOG} -- $0 "$@"
+
+[ -f /vendor/bin/maintainer ] && . /vendor/bin/maintainer
+
+TMP=/data/vendor/halo/tmp
+# Get the RAS server. If it doesn't work then don't worry about it for now.
+podfile=/data/vendor/halo/run/fetch-ras-conf.pod
+rasconf_new=$(mktemp --tmpdir=${TMP})
+
+echo "trying pod api gateway for locations ras file first (${POD})"
+${curl} --header "Authorization: z-asset ${ENCODED_AUTH_TOKEN}" \
+        --header "Accept: application/maintainer" \
+        --connect-timeout 30 --max-time 60 \
+        --output ${rasconf_new} \
+        --ciphers ${CIPHER_LIST} \
+        "https://${POD}/api/v1/rs/ras?type=$RAS_TYPE" || { echo "failed to get ras configuration file" && rm ${TMP}/* && exit 0; }
+
+sed -e 's/^\s*pod\s*\=\s*\(.*$\)/\1/;tx;d;:x' ${rasconf_new} > ${podfile}.new
+
+RC=0
+if [ -f ${podfile} ] && ! cmp -s ${podfile} ${podfile}.new; then
+   echo "pod switch detected, running maintainer in bg..."
+   env -i sh -l -c 'delaycmd 60 retrycmd -b -m 10 5 maintainer' &
+   RC=1
+fi
+
+mv ${podfile}.new ${podfile}
+mv ${rasconf_new} ${RASCONF}
+
+exit $RC

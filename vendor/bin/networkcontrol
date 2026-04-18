@@ -1,0 +1,12 @@
+#!/vendor/bin/sh
+
+WLAN_IFACE_NAME=wlan0
+IFACE_TOPIC_NAME="system.network-interface"
+
+case $1 in
+    "get-network-interface")
+        zbus-publish ${IFACE_TOPIC_NAME} ${WLAN_IFACE_NAME};;
+    *)
+        exit 1 ;;
+esac
+

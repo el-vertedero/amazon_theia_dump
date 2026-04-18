@@ -1,0 +1,77 @@
+#svc dodfuservice: performs halo dfu over all transports.
+
+# dfu parameter
+#   app - only app update
+#   all - both app and bl update
+service vendor.dodfuservice /vendor/bin/doDfu.sh /data/vendor/halo/firmware all
+   oneshot
+   disabled
+   user root
+   group system inet
+   class main
+
+service vendor.compare_dfu /vendor/bin/compare_dfu.sh
+   oneshot
+   disabled
+   user root
+   group system inet
+   class main
+
+service vendor.nordiccomm /vendor/bin/nordiccomm.sh
+   oneshot
+   disabled
+   user root
+   group system inet
+   class main
+
+on post-fs-data
+   wait /dev/halo0 60
+   chown system system /dev/halo0
+   chmod 0660 /dev/halo0
+   start vendor.nordiccomm
+   setprop vendor.halo.nordiccomm.state fs-data
+
+on property:init.svc.vendor.nordiccomm=stopped && property:vendor.halo.nordiccomm.state=fs-data
+   start vendor.halonordicfr
+
+on property:init.svc.vendor.halonordicfr=stopped
+   start vendor.nordiccomm
+   setprop vendor.halo.nordiccomm.state nordic-fr
+
+on property:init.svc.vendor.nordiccomm=stopped && property:vendor.halo.dfu=none && property:vendor.halo.nordiccomm.state=nordic-fr
+   start vendor.compare_dfu
+
+on property:init.svc.vendor.compare_dfu=stopped && property:vendor.halo.dfu=required
+   mkdir /data/vendor/halo 0777 root system
+   mkdir /data/vendor/halo/firmware 0777 root system
+   copy /vendor/firmware/halo/theia_halo_app.bin /data/vendor/halo/firmware/theia_halo_app.bin
+   copy /vendor/firmware/halo/theia_halo_app.dat /data/vendor/halo/firmware/theia_halo_app.dat
+   copy /vendor/firmware/halo/theia_sd_bl.bin /data/vendor/halo/firmware/theia_sd_bl.bin
+   copy /vendor/firmware/halo/theia_sd_bl.dat /data/vendor/halo/firmware/theia_sd_bl.dat
+   #change the ownership of the files
+   chown root system /data/vendor/halo/firmware/theia_halo_app.bin
+   chown root system /data/vendor/halo/firmware/theia_halo_app.dat
+   chown root system /data/vendor/halo/firmware/theia_sd_bl.bin
+   chown root system /data/vendor/halo/firmware/theia_sd_bl.dat
+   chmod 660 /data/vendor/halo/firmware/theia_halo_app.bin
+   chmod 660 /data/vendor/halo/firmware/theia_halo_app.dat
+   chmod 660 /data/vendor/halo/firmware/theia_sd_bl.bin
+   chmod 660 /data/vendor/halo/firmware/theia_sd_bl.dat
+   start vendor.dodfuservice
+
+on property:init.svc.vendor.dodfuservice=stopped
+   start vendor.nordiccomm
+   setprop vendor.halo.nordiccomm.state do-dfu
+   rm /data/vendor/halo/firmware/theia_halo_app.bin
+   rm /data/vendor/halo/firmware/theia_halo_app.dat
+   rm /data/vendor/halo/firmware/theia_sd_bl.bin
+   rm /data/vendor/halo/firmware/theia_sd_bl.dat
+
+on property:init.svc.vendor.nordiccomm=stopped && property:vendor.halo.comm=ready && property:init.svc.vendor.dodfuservice=stopped
+   setprop vendor.halo.ready true
+
+on property:init.svc.vendor.nordiccomm=stopped && property:vendor.halo.comm=failed && property:init.svc.vendor.dodfuservice=stopped
+   setprop vendor.halo.ready true
+
+on property:init.svc.vendor.nordiccomm=stopped && property:vendor.halo.dfu=not-required
+   setprop vendor.halo.ready true

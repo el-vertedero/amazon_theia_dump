@@ -1,0 +1,25 @@
+{
+   "root": {
+      "general": {
+         "name": "Battery Motion Sensor",
+         "deviceType": "motion-sensor.beams",
+         "fingerprint": "ring-beams-c20",
+         "catalogId": "811b7821-2cc4-4967-b8db-f5a3b7c25a12"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "battery",
+               "version": "1.0"
+            }
+         ],
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 127,
+         "minMotionSensitivity": 255,
+         "defaultMotionDwellTime": 20,
+         "defaultLightSensorEnabled": true,
+         "defaultLightSensorThreshold": 80,
+         "defaultDuskToDawn": "not-supported"
+      }
+   }
+}

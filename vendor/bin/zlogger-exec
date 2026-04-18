@@ -1,0 +1,12 @@
+#!/vendor/bin/sh
+#
+# simple include to allow scripts to pipe all output directly to zlogger
+#
+# common usage in a script, which does not break if zlogger is not installed:
+#
+#   [ -f /usr/lib/zlogger-exec ] && . /usr/lib/zlogger-exec -f $LOGFILE -- $0 "$@"
+#
+if [ -z "$_zlogger_exec" ]; then
+   export _zlogger_exec=1
+   which zlogger > /dev/null && exec zlogger "$@"
+fi

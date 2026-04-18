@@ -1,0 +1,3 @@
+mntfs_binaries_dir=/data/misc/zigbee/zboss/
+mntfs_userdata_dir=/data/misc/zigbee/zboss/
+mntfs_logs_dir=/data/misc/zigbee/zboss/

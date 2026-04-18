@@ -1,0 +1,53 @@
+on post-fs-data
+	#rfkill node for zigbee
+	chown system system /sys/class/rfkill/rfkill0/state
+	chmod 0660 /sys/class/rfkill/rfkill0/state
+	chown system system /sys/class/rfkill/rfkill1/state
+	chmod 0660 /sys/class/rfkill/rfkill1/state
+
+	#Theia zigbee GPIOs. These values are defined by HW design. For more details,
+	#please refer to lib/board_settings.h
+	#334 is SPI_CS. Silabs manually controls CS due to EZSP-SPI command-response
+	#structure. 366 is HOST_INT. Pin for NCP to tell host that it has a payload
+	#ready to send to host. 396 is the WAKE pin. Host uses to wake up the NCP
+	write /sys/class/gpio/export "334"
+	write /sys/class/gpio/export "366"
+	write /sys/class/gpio/export "396"
+
+	#CS
+	chown system system /sys/class/gpio/gpio334/direction
+	chmod 0660 /sys/class/gpio/gpio334/direction
+	chown system system /sys/class/gpio/gpio334/value
+	chmod 0660 /sys/class/gpio/gpio334/value
+
+	#HOST_INT
+	chown system system /sys/class/gpio/gpio366/direction
+	chmod 0660 /sys/class/gpio/gpio366/direction
+	chown system system /sys/class/gpio/gpio366/edge
+	chmod 0660 /sys/class/gpio/gpio366/edge
+	chown system system /sys/class/gpio/gpio366/value
+	chmod 0660 /sys/class/gpio/gpio366/value
+
+	#WAKE
+	chown system system /sys/class/gpio/gpio396/direction
+	chmod 0660 /sys/class/gpio/gpio396/direction
+	chown system system /sys/class/gpio/gpio396/value
+	chmod 0660 /sys/class/gpio/gpio396/value
+
+	#spidev node for zigbee
+	chown system system /dev/spidev32761.0
+	chmod 0660 /dev/spidev32761.0
+
+	#PTI node for zigbee
+	chown system system /dev/ttyS1
+	chmod 0660 /dev/ttyS1
+
+service migration_manager /vendor/bin/migration_manager
+    class hal
+    user system
+    group system net_admin
+    oneshot
+    disabled
+
+on property:sys.boot_completed=1
+    start migration_manager

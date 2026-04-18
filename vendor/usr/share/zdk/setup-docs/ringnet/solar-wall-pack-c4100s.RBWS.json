@@ -1,0 +1,54 @@
+{
+   "root": {
+      "general": {
+         "name": "Solar Wall Pack",
+         "deviceType": "switch.multilevel.beams",
+         "fingerprint": "ring-beams-c4100s",
+         "catalogId": "fe46100a-3c17-499f-99cb-e92b38f17f26"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "battery",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "customBrightness",
+               "version": "1.0"
+            }
+         ],
+         "defaultAutoShutoff": 30,
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 127,
+         "minMotionSensitivity": 255,
+         "defaultLightSensorEnabled": true,
+         "defaultLightSensorThreshold": 80,
+         "defaultBrightness": 1.0,
+         "defaultTurnOnDuration": 60,
+         "defaultMotionDwellTime": 20,
+         "defaultDuskToDawn": "not-supported",
+         "defaultScheduleBrightness": 0.1215686,
+         "externalPowerSourceEnabled": true,
+         "cpu": {
+            "temperatureThresholds": [
+               {
+                  "firmwareVersion": "2.5.1-29",
+                  "high": 45,
+                  "low": -10
+               }
+            ]
+         },
+         "battery": {
+            "supportedChargingTypes": [ "solar-panel", "usb-charger", "external-power-source" ]
+         }
+      }
+   }
+}

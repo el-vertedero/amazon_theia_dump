@@ -1,0 +1,32 @@
+{
+   "root": {
+      "general": {
+         "name": "Battery Floodlight",
+         "deviceType": "switch.multilevel.beams",
+         "fingerprint": "ring-beams-c3500",
+         "catalogId": "c383e6e4-eef8-48c0-8100-1fbcbff4daa7"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "battery",
+               "version": "1.0"
+            },
+            {
+               "feature": "customBrightness",
+               "version": "1.0"
+            }
+         ],
+         "defaultAutoShutoff": 30,
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 127,
+         "minMotionSensitivity": 255,
+         "defaultLightSensorEnabled": true,
+         "defaultLightSensorThreshold": 80,
+         "defaultBrightness": 0.5,
+         "defaultTurnOnDuration": 60,
+         "defaultMotionDwellTime": 20,
+         "defaultDuskToDawn": "not-supported"
+      }
+   }
+}

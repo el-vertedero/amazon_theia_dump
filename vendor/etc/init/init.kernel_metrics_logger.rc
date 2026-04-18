@@ -1,0 +1,8 @@
+service kmlogger /vendor/bin/kernel_metrics_logger.sh
+    user root
+    group root
+    oneshot
+    disabled
+
+on property:sys.boot_completed=1
+    start kmlogger

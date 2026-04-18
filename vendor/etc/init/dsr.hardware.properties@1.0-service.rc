@@ -1,0 +1,6 @@
+service dsr-properties-1-0 /vendor/bin/hw/dsr.hardware.properties@1.0-service
+    class hal
+    user system
+    group system
+    disabled
+

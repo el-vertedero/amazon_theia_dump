@@ -1,0 +1,229 @@
+#svc hub broker
+service vendor.halo-hub-broker /vendor/bin/psbroker
+   user system
+   group root system inet net_admin shell log
+   disabled
+
+#svc hub core
+service vendor.halo-hub-core /vendor/bin/hub-core
+   user system
+   group root system inet net_admin shell log
+   disabled
+
+#Metrics reporter service
+service vendor.halo-logr /vendor/bin/halo_logr "--uploader.server=${vendor.halo.server}" "--uploader.env=${vendor.halo.env}" "--uploader.device_id=${vendor.halo.ringnetid}" "--uploader.device_kind=${ro.product.config.type}" "--uploader.sdk_version=${vendor.halo.version}" "--uploader.serial=${vendor.halo.serial}" "--uploader.auth_token=${vendor.halo.authtoken}" "--uploader.firmware_version=${ro.build.version.number}"
+   user system
+   group root system inet net_admin shell log
+   disabled
+
+#svc core plugins
+service vendor.halo-core-rnp /vendor/bin/core-plugin-loader --loader.plugin_path="/vendor/lib/cp_ringnet.so"
+   user system
+   group root system inet net_admin shell log
+   disabled
+
+service vendor.halo-core-swp /vendor/bin/cp_sidewalk
+   user system
+   group root system inet net_admin shell log
+   capabilities NET_ADMIN
+   disabled
+
+#disable for now
+service vendor.halo-msg-bridge /vendor/bin/core-messaging-bridge
+   user system
+   group root system inet net_admin shell log
+   disabled
+
+service vendor.halo-init /vendor/bin/init_full_halo_services.sh
+   user system
+   group root system inet net_admin shell
+   oneshot
+   disabled
+
+service vendor.halo-prop-init /vendor/bin/init_halo_metrics.sh
+   user system
+   group root system inet net_admin shell
+   oneshot
+   disabled
+
+service vendor.halo-otamgr /vendor/bin/halo_otamgr
+   user system
+   group root system inet net_admin shell log
+   oneshot
+   disabled
+
+service vendor.halo-sendlogs /vendor/bin/sendlogs.sh
+   user system
+   group root system inet net_admin shell log
+   oneshot
+   disabled
+
+service vendor.halo-ota-exit /vendor/bin/halo_ota_exit.sh
+   user system
+   group root system inet net_admin shell
+   oneshot
+   disabled
+
+service vendor.halo-config /vendor/bin/init_full_halo_services.sh config
+   user system
+   group root system inet net_admin shell
+   oneshot
+   disabled
+
+service vendor.halo-init-prov /vendor/bin/init_full_halo_services.sh prov
+   user system
+   group root system inet net_admin shell
+   oneshot
+   disabled
+
+service vendor.halofwlog /vendor/bin/halofw-log.sh
+   user system
+   group root system inet net_admin shell
+   disabled
+
+service vendor.halo-regiond /vendor/bin/halo_regiond
+   user system
+   group root system inet net_admin shell log
+   oneshot
+   disabled
+
+service vendor.halo-bssid-scan /vendor/bin/halo_bssid_scan
+   user system
+   group root system inet net_admin shell
+   oneshot
+   disabled
+
+on boot
+   export SETUP_DOC_PATH /vendor/usr/share/zdk/setup-docs/
+   export CONFUSER_ROOT /mnt/halo/etc
+
+   # this should be created by wifi on post-fs
+   wait  /data/vendor 30
+
+   mkdir /data/vendor/halo 0770 system system
+   mkdir /data/vendor/halo/var 0770 system system
+   mkdir /data/vendor/halo/var/log 0770 system system
+   mkdir /data/vendor/halo/var/log/core-plugins 0770 system system
+   mkdir /data/vendor/halo/var/log/zservice 0770 system system
+   mkdir /data/vendor/halo/var/sqlite 0770 system system
+   mkdir /data/vendor/halo/var/run 0770 system system
+   mkdir /data/vendor/halo/var/run/hub-core 0770 system system
+   mkdir /data/vendor/halo/var/metrics_reporter 0770 system system
+   mkdir /data/vendor/halo/var/rsl_ringnet_metrics 0770 system system
+   mkdir /data/vendor/halo/run 0770 system system
+   mkdir /data/vendor/halo/run/mfg 0770 system system
+   mkdir /data/vendor/halo/run/ras-hosts 0770 system system
+   mkdir /data/vendor/halo/tmp 0770 system system
+   mkdir /data/vendor/halo/tmp/dfu 0770 system system
+
+   mkdir /data/vendor/halo/etc 0770 system system
+   mkdir /data/vendor/halo/etc/maintainer 0770 system system
+
+   mkdir /mnt/halo 0770 system system
+   mkdir /mnt/halo/run 0770 system system
+   mkdir /mnt/halo/run/mfg 0770 system system
+   mkdir /mnt/halo/run/ras-hosts 0770 system system
+
+   mkdir /mnt/halo/etc 0770 system system
+   mkdir /mnt/halo/etc/core-plugins 0770 system system
+   mkdir /mnt/halo/etc/core-plugins/ringnet.conf.d 0770 system system
+   mkdir /mnt/halo/etc/core-plugins/sidewalk.conf.d 0770 system system
+   mkdir /mnt/halo/etc/hub-core.conf.d 0770 system system
+   mkdir /mnt/halo/etc/core-messaging-bridge.conf.d 0770 system system
+   mkdir /mnt/halo/etc/las-broker 0770 system system
+   mkdir /mnt/halo/etc/maintainer 0770 system system
+   mkdir /mnt/halo/etc/update_lights.conf.d 0770 system system
+   mkdir /mnt/halo/etc/halo_logr.conf.d 0770 system system
+   mkdir /mnt/halo/etc/halo_reg.conf.d 0770 system system
+   mkdir /mnt/halo/etc/halo_regiond.conf.d 0770 system system
+   mkdir /mnt/halo/etc/halo_bssid_scan.conf.d 0770 system system
+
+   start vendor.halo-config
+
+on property:init.svc.vendor.halo-config=stopped
+   start vendor.halo-hub-broker
+
+on property:init.svc.vendor.halo-hub-broker=running
+   start vendor.halo-bssid-scan
+
+on property:vendor.halo.ready=true
+   start vendor.halo-init
+   start vendor.halofwlog
+
+on property:init.svc.vendor.halo-init=stopped && property:persist.vendor.halo.country=*
+   start vendor.halo-regiond
+
+on property:vendor.halo.protocol.enable=true && property:vendor.halo.prov=none && property:vendor.halo.hubcore.config=true
+   start vendor.halo-hub-core
+
+on property:vendor.halo.protocol.enable=true && property:init.svc.vendor.halo-init-prov=stopped && property:vendor.halo.hubcore.config=true
+   start vendor.halo-hub-core
+
+on property:vendor.halo.protocol.enable=false
+   stop vendor.halo-core-rnp
+   stop vendor.halo-core-swp
+   stop vendor.halo-hub-core
+   stop vendor.halo-logr
+
+#Start ringnet plugin
+on property:init.svc.vendor.halo-hub-core=running && property:vendor.halo.enable.ringnet=true && property:vendor.halo.key.refresh=false
+   write /mnt/halo/etc/sw_version ${ro.build.version.incremental}
+   chown system system /mnt/halo/etc/sw_version
+   chmod 0660 /mnt/halo/etc/sw_version
+   start vendor.halo-core-rnp
+
+#Start sidewalk plugin
+on property:init.svc.vendor.halo-logr=running && property:vendor.halo.enable.sidewalk=true && property:vendor.halo.key.refresh=false
+   write /mnt/halo/etc/sw_version ${ro.build.version.incremental}
+   chown system system /mnt/halo/etc/sw_version
+   chmod 0660 /mnt/halo/etc/sw_version
+   write /mnt/halo/run/mfg/gatewayid ${ro.serialno}
+   chown system system /mnt/halo/run/mfg/gatewayid
+   chmod 0660 /mnt/halo/run/mfg/gatewayid
+   start vendor.halo-core-swp
+
+#Remove hub-core.pid
+on property:init.svc.vendor.halo-hub-core=running
+   start vendor.halo-prop-init
+   wait /data/vendor/halo/var/run/hub-core/hub-core.pid 1
+   rm /data/vendor/halo/var/run/hub-core/hub-core.pid
+
+#Start metrics-reporter
+on property:init.svc.vendor.halo-hub-core=running && property:init.svc.vendor.halo-prop-init=stopped
+   start vendor.halo-logr
+
+#Restart core services after provisioning
+on property:vendor.halo.core-services=start
+   setprop vendor.halo.prov done
+   setprop vendor.halo.prov.trigger done
+   start vendor.halo-init-prov
+
+#Stop all core services before provisioning
+on property:vendor.halo.core-services=stop
+   stop vendor.halo-core-rnp
+   stop vendor.halo-core-swp
+   stop vendor.halo-hub-core
+   stop vendor.halo-logr
+
+on property:vendor.halo.ota.900=start
+   mkdir /data/vendor/halo/tmp/dfu 0770 system system
+   start vendor.halo-otamgr
+
+on property:init.svc.vendor.halo-otamgr=stopped
+   start vendor.halo-ota-exit
+   setprop vendor.halo.ota.900 stop
+   setprop persist.vendor.halo.ota.900 stopped
+
+on property:vendor.halo.sendlogs=start
+   start vendor.halo-sendlogs
+
+on property:init.svc.vendor.halo-sendlogs=stopped
+   setprop vendor.halo.sendlogs stop
+
+on property:init.svc.vendor.halo-otamgr=running
+   setprop persist.vendor.halo.ota.900 running
+
+#Restart OTA on reboot
+on property:vendor.halo.ota.900=none && property:persist.vendor.halo.ota.900=running && property:init.svc.vendor.halo-core-rnp=running
+   start vendor.halo-otamgr
+

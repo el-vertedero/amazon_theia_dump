@@ -1,0 +1,149 @@
+/*
+ * sensor_config.json
+ *
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved
+ *
+ * PROPRIETARY/CONFIDENTIAL
+ *
+ * Use is subject to license terms.
+ */
+
+/*
+ * Refer to wiki link:
+ * https://wiki.labcollab.net/confluence/display/Doppler/How+to+write+sensor_config.json+file
+ * for how to write sensor_config.json file
+ */
+
+{
+    "sensorDevice": [{
+            "sensorName": "tcs3400_als",
+            "vendorName": "AMS",
+            "type": "rgbw",
+            "resolution": 0.01,
+            "minDelay": 700000,
+            "isVirtual": false,
+            "inputSysPath": "/sys/devices/virtual/input",
+            "channelNames": [
+                "als_red",
+                "als_green",
+                "als_blue",
+                "als_clear",
+                "als_itime",
+                "als_gain"
+            ],
+            "needsEnable": true,
+            "enablePairs": [{
+                /* change to use clear channel */
+                "name": "ir_toggle_mode",
+                "value": "0"
+            }],
+            "needsRefresh": false,
+            "needsParsing": false
+        },
+        {
+            "sensorName": "bma4xy_acc_5_18",
+            "vendorName": "BOSCH",
+            "type": "accel",
+            "resolution": 0.01,
+            "minDelay": 40000,
+            "isVirtual": false,
+            "inputSysPath": "/sys/devices/virtual/input",
+            "channelNames": [
+                "acc_value"
+            ],
+            "needsEnable": true,
+            "needsRefresh": false,
+            "needsParsing": true,
+            "finalChannels": 3,
+            "needsScale": false,
+            "enablePairs": [{
+                    "name": "acc_op_mode",
+                    "value": "0"
+                },
+                {
+                    "name": "load_config_stream",
+                    "value": "3"
+                },
+                /* odr 25Hz */
+                {
+                    "name": "acc_odr",
+                    "value": "6"
+                },
+                /* g-range +/-2g */
+                {
+                    "name": "acc_range",
+                    "value": "0"
+                },
+                /* OSR2 mode */
+                {
+                    "name": "acc_bw",
+                    "value": "1"
+                }
+            ],
+            /* wait 600ms after enabling */
+            "enableWaitTimeUs": 600000
+        },
+        {
+            "sensorName": "bma4xy_acc_4_18",
+            "vendorName": "BOSCH",
+            "type": "accel",
+            "resolution": 0.01,
+            "isVirtual": false,
+            "inputSysPath": "/sys/devices/virtual/input",
+            "channelNames": [
+                "acc_value"
+            ],
+            "needsEnable": true,
+            "enablePairs": [{
+                    "name": "acc_op_mode",
+                    "value": "0"
+                },
+                {
+                    "name": "load_config_stream",
+                    "value": "3"
+                }
+            ],
+            "needsRefresh": false,
+            "needsParsing": true,
+            "finalChannels": 3,
+            "needsScale": false
+        },
+        {
+            "sensorName": "lsm6dso_gyro",
+            "vendorName": "STM",
+            "type": "gyro",
+            "resolution": 0.001,
+            "isVirtual": false,
+            "inputSysPath": "/sys/bus/iio/devices",
+            "channelNames": [
+                "in_anglvel_x_raw",
+                "in_anglvel_y_raw",
+                "in_anglvel_z_raw"
+
+            ],
+            "needsEnable": true,
+            "enablePairs": [{
+                "name": "sampling_frequency",
+                "value": "52"
+            }],
+            "needsRefresh": false,
+            "needsParsing": false,
+            "needsScale": true,
+            "channelScaleNames": [
+                "in_anglvel_x_scale",
+                "in_anglvel_y_scale",
+                "in_anglvel_z_scale"
+            ]
+        },
+        {
+            "sensorName": "virtual_als",
+            "vendorName": "Amazon",
+            "type": "light",
+            "resolution": 0.01,
+            "isVirtual": true,
+            "baseSensor": [
+                0
+            ]
+        }
+    ]
+}

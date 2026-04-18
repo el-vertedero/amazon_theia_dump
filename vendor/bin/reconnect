@@ -1,0 +1,4 @@
+#!/vendor/bin/sh
+
+# First, try to update RAS hosts config
+fetch-ras-conf

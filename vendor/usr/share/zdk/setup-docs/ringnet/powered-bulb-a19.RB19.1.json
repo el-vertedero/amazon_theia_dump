@@ -1,0 +1,40 @@
+{
+   "root": {
+      "general": {
+         "name": "A19 Bulb",
+         "deviceType": "switch.multilevel.beams",
+         "fingerprint": "ring-beams-a19",
+         "catalogId": "da93f844-fc2b-44bf-8064-f069acbee25c"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "powered",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "unlimitedTurnOnDuration",
+               "version": "1.0"
+            },
+            {
+               "feature": "customBrightness",
+               "version": "1.0"
+            }
+         ],
+         "motionSensorProvided": false,
+         "lightSensorProvided": false,
+         "defaultBrightness": 1.0,
+         "defaultDuskToDawn": "not-supported",
+         "defaultTurnOnDuration": 0,
+         "preservesInfiniteTurnOnInDfu": true
+      }
+   }
+}

@@ -1,0 +1,102 @@
+#svc haloprovision: starts halo provisioning.
+service haloprovision /vendor/bin/halo_provision.sh provision
+   oneshot
+   disabled
+   user system
+   group root inet
+   class main
+
+#svc halounprovision: starts halo unprovisioning.
+service halounprovision /vendor/bin/halo_provision.sh unprovision
+   oneshot
+   disabled
+   user system
+   group root inet
+   class main
+
+#svc halokeyrefresh: starts halo key refresh.
+service vendor.halokeyrefresh /vendor/bin/halo_provision.sh keyrefresh
+   oneshot
+   disabled
+   user system
+   group root inet
+   class main
+
+#svc haloprovd for reading MAP registration events
+service haloprovd /system/bin/haloprovd
+   user system
+   group root inet log
+   class main
+   disabled
+
+#svc haloprovretry for retrying registration
+service haloprovretry /vendor/bin/halo_provision_retry.sh
+   user system
+   group root inet log
+   class main
+   disabled
+   oneshot
+
+service vendor.halonordicfr /vendor/bin/halo_provision.sh factoryreset
+   oneshot
+   disabled
+   user system
+   group root inet
+   class main
+
+service vendor.haloprotstatus /vendor/bin/halo_protocol_status.sh
+   oneshot
+   disabled
+   user system
+   group root inet
+   class main
+
+on property:vendor.halo.prov.trigger=start_provision
+   setprop persist.vendor.halo.host provision_triggered
+
+on property:vendor.halo.prov.trigger=start_unprovision
+   #Use case where user unprovisions the device before halo is enabled
+   setprop persist.vendor.halo.host unprovision_triggered
+   #Disable the below line if halo needs to be disabled
+   start halounprovision
+
+#Disable the below init if halo needs to be disabled
+on property:init.svc.vendor.halo-init=stopped && property:persist.vendor.halo.host=provision_triggered && property:vendor.halo.protocol.enable=true
+   mkdir /data/vendor/halo/provision 0770 system root
+   mkdir /data/vendor/halo/provision/workdir 0770 system root
+   start haloprovision
+
+on boot
+   start haloprovd
+
+on property:persist.vendor.halo.prov.status=retry
+   start haloprovretry
+
+on property:persist.vendor.halo.prov.status=trigger_provision
+   mkdir /data/vendor/halo/provision 0770 system root
+   mkdir /data/vendor/halo/provision/workdir 0770 system root
+   start haloprovision
+
+on property:persist.vendor.halo.prov.status=provisioned
+   rm /data/vendor/halo/provision/workdir/config_status
+   rm /data/vendor/halo/provision/workdir/header
+   rm /data/vendor/halo/provision/workdir/location_settings
+   rm /data/vendor/halo/provision/workdir/response
+   rm /data/vendor/halo/provision/workdir/secure/response
+   rm /data/vendor/halo/provision/workdir/secure/request
+   stop haloprovd
+
+on property:vendor.halo.key.refresh=true && property:persist.vendor.halo.prov.status=provisioned && property:init.svc.vendor.halo-hub-core=running
+   mkdir /data/vendor/halo/provision 0770 system root
+   mkdir /data/vendor/halo/provision/workdir 0770 system root
+   start vendor.halokeyrefresh
+
+on property:init.svc.vendor.halokeyrefresh=stopped
+   rm /data/vendor/halo/provision/workdir/keyrefresh/response
+   rm /data/vendor/halo/provision/workdir/keyrefresh/request
+   rm /data/vendor/halo/provision/workdir/secure/response
+   rm /data/venidor/halo/provision/workdir/secure/request
+   start vendor.haloprotstatus
+
+on property:init.svc.haloprovision=stopped && property:persist.vendor.halo.prov.status=provisioned
+   start vendor.haloprotstatus

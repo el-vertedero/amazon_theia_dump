@@ -1,0 +1,8 @@
+#
+# Copyright (c) 2023 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+on property:sys.boot_completed=1
+    write /sys/kernel/mm/ksm/sleep_millisecs 250
+    write /sys/kernel/mm/ksm/seeker_sleep_millisecs 50
+    write /sys/kernel/mm/ksm/mode "always"

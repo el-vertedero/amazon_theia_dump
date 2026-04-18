@@ -1,0 +1,53 @@
+{
+   "root": {
+      "general": {
+         "name": "Solar Pathlight Sensor",
+         "deviceType": "switch.multilevel.beams",
+         "fingerprint": "ring-beams-c50s-rev2",
+         "catalogId": "7beb0763-f19e-4f7f-a5f0-eb929cc328c1"
+      },
+      "protocol": {
+         "featureCapabilitySupport": [
+            {
+               "feature": "battery",
+               "version": "1.0"
+            },
+            {
+               "feature": "schedule",
+               "version": "1.0"
+            },
+            {
+               "feature": "scheduleDuskToDawn",
+               "version": "1.0"
+            },
+            {
+               "feature": "customBrightness",
+               "version": "1.0"
+            }
+         ],
+         "defaultAutoShutoff": 30,
+         "defaultMotionEnabled": true,
+         "defaultMotionSensitivity": 255,
+         "minMotionSensitivity": 255,
+         "defaultLightSensorEnabled": true,
+         "defaultLightSensorThreshold": 80,
+         "defaultBrightness": 1.0,
+         "defaultTurnOnDuration": 60,
+         "defaultMotionDwellTime": 20,
+         "defaultDuskToDawn": "not-supported",
+         "defaultScheduleBrightness": 0.0196078,
+         "cpu": {
+            "temperatureThresholds": [
+               {
+                  "firmwareVersion": "2.5.4-40",
+                  "high": 50,
+                  "low": 0
+               }
+            ]
+         },
+         "battery": {
+            "supportedChargingTypes": [ "solar-panel", "usb-charger" ]
+         }
+      }
+   }
+}

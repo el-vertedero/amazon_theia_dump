@@ -1,0 +1,22 @@
+on early-boot
+    chown system system /dev/theia-motion
+    chmod 0666 /dev/theia-motion
+    mkdir /data/vendor/motor
+    chown system system /data/vendor/motor
+    chown system system /data/vendor/motor/motor_logging.txt
+    chown system system /sys/devices/platform/11010000.spi/spi_master/spi32765/spi32765.0/mcu_boot
+    chown system system /sys/devices/platform/11010000.spi/spi_master/spi32765/spi32765.0/mcu_rst
+    chown system system /sys/devices/platform/11010000.spi/spi_master/spi32765/spi32765.0/mcu_power
+
+    #for hvt
+    mkdir /mnt/vendor/nvcfg/motor
+    chown system system /mnt/vendor/nvcfg/motor
+    chown system system /mnt/vendor/nvcfg/motor/hall_norm_table.bin
+
+service mcu_fw_updater /vendor/bin/motor_fw_update.sh
+    class main
+    user system
+    group system
+    oneshot
+
+

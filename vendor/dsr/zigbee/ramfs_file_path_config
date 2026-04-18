@@ -1,0 +1,3 @@
+ramfs_unix_domain_sock_dir=/data/vendor/zigbee/
+ramfs_logs_dir=/data/misc/zigbee/zboss/
+ramfs_tmp_dir=/data/misc/zigbee/zboss/
