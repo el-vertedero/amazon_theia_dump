@@ -1,0 +1,45 @@
+{
+    "config_type": "ntt_fusion_algo_window_avg",
+    "config_version": 1,
+    "accept_lockout_msec": 1200,
+    "initialization_lockout_msec": 80,
+    "dvad_scorer_component": {
+        "component_name": "",
+        "posterior_type": "decoding-scores",
+        "scorer_index": 1
+    },
+    "dvad_start_of_speech_scorer_component": {
+        "component_name": "",
+        "posterior_type": "decoding-scores",
+        "scorer_index": 2
+    },
+    "dvad_score_history_msec": 350,
+    "dvad_start_of_speech_uncertainty_msec": 150,
+    "dvad_window_length_num_frames": 104,
+    "dvad_accept_threshold": 0.55,
+    "dvad_client_property_overrides": [
+        {
+            "accept_threshold": 0.65,
+            "client_property": "TTSPlayerState",
+            "condition_function": {
+                "name": "equals",
+                "operand": 1
+            },
+            "config_type": "client_prop_override",
+            "disable_ntt_detections": false,
+            "exponential_decay": 0.0,
+            "start_lockout_msec": 1750
+        }
+    ],
+    "cv_accept_threshold": 0.47,
+    "cv_speaker_select_threshold": 0.0,
+    "cv_score_history_msec": 1000,
+    "cv_asd_average_window_msec": 750,
+    "cv_dd_average_window_msec": 750,
+    "cv_fusion_score_type": "ACTIVE_SPEAKER",
+    "cv_speaker_select_score_type": "NONE",
+    "cv_score_calculation_offset_msec": 150,
+    "cv_max_events_per_sec": 15,
+    "cv_person_tracking_expiry_msec": 5000,
+    "enable_verbose_logging": false
+}

@@ -1,0 +1,10 @@
+{
+    "processPrioritization": true,
+    "processPriorityList": [
+        {
+            "processName": "com.amazon.whisperjoin.middleware.v2.np",
+            "processPriority": 2,
+            "processOomScore": 200
+        }
+    ]
+}

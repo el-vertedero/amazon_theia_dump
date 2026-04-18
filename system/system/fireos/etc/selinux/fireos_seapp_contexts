@@ -1,0 +1,24 @@
+user=_app seinfo=amazonapp domain=amazon_app type=app_data_file levelFrom=none
+user=_app seinfo=platform name=com.android.providers.downloads domain=priv_app type=app_data_file levelFrom=none
+user=_app seinfo=amazonapp domain=amazon_log_app name=com.amazon.client.metrics type=app_data_file levelFrom=none
+user=_app seinfo=amazonapp domain=amazon_log_app name=com.amazon.device.loganalyzer type=app_data_file levelFrom=none
+user=_app seinfo=amazonapp domain=priv_app name=com.amazon.device.software.ota type=app_data_file levelFrom=none
+user=_app seinfo=platform name=com.amazon.providers.contentsupport domain=amazon_app type=app_data_file levelFrom=none
+user=_app seinfo=platform name=com.amazon.inloctest domain=inloc_app type=app_data_file levelFrom=user
+user=_app seinfo=platform name=com.android.acsproxy domain=acsproxy_app type=app_data_file levelFrom=none
+user=_app seinfo=platform name=com.amazon.kvsaofservice domain=amazon_app type=app_data_file levelFrom=none
+user=_app seinfo=platform name=com.amazon.blemeshtest domain=meshmgr_app type=app_data_file levelFrom=user
+user=_app seinfo=platform name=com.amazon.device.gadgetscontrolmanager domain=gadgets_app type=app_data_file levelFrom=user
+user=_app seinfo=platform domain=native_proxy_app name=com.amazon.NativeAccessorProxyServices type=app_data_file levelFrom=user
+user=_app seinfo=platform name=com.amazon.device.smarthome.dshs.services domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.adapters.ble domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.adapters.mock domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.adapters.echo domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.ota domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.dshs.multimodalux domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.dshs.endpointdetectorCA domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.udpcontroller.services domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.device.smarthome.adapters.zigbee domain=amazon_smarthome_app type=app_data_file
+user=_app seinfo=platform name=com.amazon.whad domain=whad_app type=app_data_file levelFrom=user
+user=_app seinfo=platform name=amazon.speech.sim domain=speech_interaction_manager type=app_data_file levelFrom=none
+user=_app seinfo=amazonapp domain=ahe_remote_skill name=com.amazon.alexahybridremoteskill type=app_data_file levelFrom=none

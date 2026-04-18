@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+   Copyright (c) 2024 Amazon.com, Inc. or its affiliates.  All rights reserved.
+   PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+-->
+<!--
+    This file contains dangerous permissions to be granted by default
+    for smarthome widget app.
+-->
+
+<exceptions>
+    <exception package="com.amazon.smarthomemapviewapp">
+        <permission name="android.permission.SYSTEM_ALERT_WINDOW" fixed="true"/>
+    </exception>
+</exceptions>

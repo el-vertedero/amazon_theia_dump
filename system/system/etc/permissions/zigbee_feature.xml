@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+     <!-- By declaring the feature LAB126_ZIGBEE here The api
+          PackageManager.hasSystemFeature(String feature) will return true if
+          passed the string "LAB126_ZIGBEE".-->
+     <feature name="LAB126_ZIGBEE" />
+</permissions>

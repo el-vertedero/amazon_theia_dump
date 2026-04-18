@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ com.amazon.ace.xml
+  ~
+  ~ Copyright (c) 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~
+  ~ PROPRIETARY/CONFIDENTIAL
+  ~
+  ~ Use is subject to license terms.
+  -->
+
+<permissions>
+    <permission name="com.amazon.permission.ACE_GROUP_ID" >
+        <group gid="vendor_ace_group" />
+    </permission>
+</permissions>

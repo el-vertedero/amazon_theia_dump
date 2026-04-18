@@ -1,0 +1,14 @@
+#
+# Copyright (c) 2020 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+on property:sys.amazon.usbmode=host
+    write /sys/devices/platform/otg_iddig/otg_mode "idle"
+    wait /sys/devices/platform/otg_iddig/done 1
+    write /sys/devices/platform/otg_iddig/otg_mode "host"
+
+on property:sys.amazon.usbmode=device
+    write /sys/devices/platform/otg_iddig/otg_mode "idle"
+    wait /sys/devices/platform/otg_iddig/done 1
+    write /sys/devices/platform/otg_iddig/otg_mode "device"

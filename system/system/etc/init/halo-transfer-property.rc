@@ -1,0 +1,3 @@
+on property:persist.sys.wifi.country_code=*
+   setprop persist.vendor.halo.country ${persist.sys.wifi.country_code}
+

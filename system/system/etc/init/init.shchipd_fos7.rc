@@ -1,0 +1,20 @@
+# FOS7 SmartHome CHIP Daemon init.rc configuration
+
+on post-fs-data
+    mkdir /data/securedStorageLocation/SmartHome 0777 vendor_smarthome vendor_smarthome
+    mkdir /data/securedStorageLocation/SmartHome/PROT_CHIP 0777 vendor_smarthome vendor_smarthome
+    mkdir /data/securedStorageLocation/SmartHome/chip-tool-server/ 0777 vendor_smarthome vendor_smarthome
+    mkdir /data/securedStorageLocation/SmartHome/chip-tool/ 0777 vendor_smarthome vendor_smarthome
+
+on property:sys.boot_completed=1
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_CHIP
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_CHIP/CapabilityInstanceDatabase.db
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_CHIP/CHIPAdapterDatabase.db
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_CHIP/CHIPAdapterDatabase.db-journal
+    start shchipd
+
+service shchipd /system/bin/SmartHomeChipd
+    class main
+    user vendor_smarthome
+    group system vendor_aipc dbus inet vendor_amazon_gid vendor_ace_kv_storage vendor_ace_group
+    disabled

@@ -1,0 +1,103 @@
+#
+# Copyright (c) 2020 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+service spinet0 /vendor/bin/spinet_init --stdio-to-logd spinet0 169.254.0.1 169.254.0.2
+   user root
+   disabled
+
+service socks_spinet0_debug /system/bin/socks -i spinet0 -w -d
+   user root
+   group root system
+   disabled
+
+service socks_spinet0 /system/bin/socks -i spinet0 -w
+   user root
+   group root system
+   disabled
+
+service wd_host /system/bin/CompanionWatchdogD -g localhost.mopac:61055 -b localhost.mopac:61061
+   group inet
+   disabled
+
+on early-boot
+    mkdir /dev/cpuset/bigcpus
+    chmod 0777 /dev/cpuset/bigcpus
+    chmod 0777 /dev/cpuset/bigcpus/tasks
+    write /dev/cpuset/bigcpus/mems 0
+    write /dev/cpuset/bigcpus/cpus 4-7
+
+on boot
+    #Set usb pid for Theia(0x01Bx)
+    setprop ro.vendor.usb.pid.mtp 0x01B1
+    setprop ro.vendor.usb.pid.mtp.adb 0x01B2
+    setprop ro.vendor.usb.pid.ptp 0x01B3
+    setprop ro.vendor.usb.pid.ptp.adb 0x01B4
+    setprop ro.vendor.usb.pid.adb 0x01B8
+    # Prepare for and start watchdog
+    write /sys/class/gpio/export "437"
+    write /sys/class/gpio/export "376"
+    wait /sys/class/gpio/gpio437/value 5
+    wait /sys/class/gpio/gpio376/value 5
+    start wd_host
+
+on early-fs
+   write /sys/block/zram0/comp_algorithm zstd
+
+on post-fs
+   #Configuring pins for mute led brightness
+   write /sys/class/pwm/pwmchip0/export 0
+   write /sys/class/pwm/pwmchip0/pwm0/period 255
+   write /sys/class/pwm/pwmchip0/pwm0/duty_cycle 16
+   write /sys/class/pwm/pwmchip0/pwm0/enable 1
+
+   # start dbus for bluetooth and avahi
+   start dbus
+   start avahi-daemon
+
+on firmware_mounts_complete
+    # grpc_boot_sync accesses persistent ota properties and
+    # should be synchronously executed before the on boot stage in order
+    # to prevent applications which require communication with the
+    # companion SoC form starting until the companion becomes stable.
+    write /proc/bootprof "INIT:grpc_boot_sync_START"
+    exec - root inet -- /system/bin/grpc_boot_sync
+    write /proc/bootprof "INIT:grpc_boot_sync_END"
+
+service ntpserver /vendor/bin/ntpd -I spinet0 -n -D 0
+   user root
+   disabled
+
+on post-fs-data
+   insmod /vendor/lib/modules/spinet.ko
+   start spinet0
+
+on property:spinet.spinet0.ready=1 && property:logd.time.update=true
+   start ntpserver
+
+# SOCKS server should be restarted on parent service bounces to ensure
+# firewall rules are reapplied (if necessary)
+on property:spinet.spinet0.ready=1 && property:ro.debuggable=1
+   restart socks_spinet0_debug
+
+on property:spinet.spinet0.ready=1 && property:ro.debuggable=0
+   restart socks_spinet0
+
+service ahe_firewall_init /system/bin/ahe_firewall_init.sh
+   user root
+   disabled
+   oneshot
+
+on property:spinet.spinet0.ready=1 && property:alexa.hybrid.firewall_config_ready=1
+   start ahe_firewall_init
+
+service dbus /system/bin/dbus-daemon --system --nofork
+    class main
+    socket dbus stream 660 dbus dbus
+    user dbus
+    group dbus
+
+service avahi-daemon /system/bin/avahi-daemon --no-drop-root
+    user root
+    group dbus

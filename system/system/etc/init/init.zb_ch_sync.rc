@@ -1,0 +1,12 @@
+
+service sync_zb_ch /system/bin/zb_ch_sync -c${zigbee.ncp.channel}
+    user system
+    group system vendor_ace_kv_storage vendor_ace_group
+    oneshot
+    disabled
+
+on property:vendor.zigbee.sync_zb_ch=true
+    start sync_zb_ch
+    setprop vendor.zigbee.sync_zb_ch false
+
+

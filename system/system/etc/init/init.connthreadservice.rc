@@ -1,0 +1,21 @@
+# Copyright 2021-2022 Amazon.com, Inc. or its affiliates. All rights reserved.
+#
+# AMAZON PROPRIETARY/CONFIDENTIAL
+#
+# You may not use this file except in compliance with the terms and conditions
+# set forth in the accompanying LICENSE.TXT file.
+#
+# THESE MATERIALS ARE PROVIDED ON AN "AS IS" BASIS. AMAZON SPECIFICALLY
+# DISCLAIMS, WITH RESPECT TO THESE MATERIALS, ALL WARRANTIES, EXPRESS,
+# IMPLIED, OR STATUTORY, INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+#
+
+on property:openthread.init.done=y && property:wlan.driver.status=ok
+    start connthreadsvc
+
+service connthreadsvc /system/bin/ace_conn_thread_service
+    class main
+    user system
+    group system vendor_aipc vendor_ace_kv_storage vendor_ace_group inet dbus
+    disabled

@@ -1,0 +1,4 @@
+service halo_fos_bridge /system/bin/halo_fos_bridge
+    class main
+    user system
+    group root system inet net_admin shell log

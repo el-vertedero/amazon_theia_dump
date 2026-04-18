@@ -1,0 +1,5 @@
+service zb_db_mig_util /system/bin/zb_db_mig_util
+    user system
+    group system vendor_ace_kv_storage vendor_ace_group
+    oneshot
+    disabled

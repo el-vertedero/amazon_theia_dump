@@ -1,0 +1,89 @@
+{
+	"processes": [
+		{
+			"name": ".amazon.paladin",
+			"soft_memory_limit": 450000,
+			"hard_memory_limit": 500000
+		},
+		{
+			"name": "zon.ambienthome",
+			"soft_memory_limit": 365000,
+			"hard_memory_limit": 1024000
+		},
+		{
+			"name": "azon.speech.sim",
+			"soft_memory_limit": 170000,
+			"hard_memory_limit": 256000
+		},
+		{
+			"name": "system_server",
+			"soft_memory_limit": 200000,
+			"hard_memory_limit": 400000
+		},
+		{
+			"name": "com.amazon.aria",
+			"soft_memory_limit": 250000,
+			"hard_memory_limit": 346000
+		},
+		{
+			"name": "m.amazon.bishop",
+			"soft_memory_limit": 200000,
+			"hard_memory_limit": 400000
+		},
+		{
+			"name": "ndroid.systemui",
+			"soft_memory_limit": 46000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": "AlexaHybridExec",
+			"soft_memory_limit": 89000,
+			"hard_memory_limit": 256000
+		},
+		{
+			"name": "a.datastore.app",
+			"soft_memory_limit": 45000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": "com.amazon.whad",
+			"soft_memory_limit": 42000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": "abrowserservice",
+			"soft_memory_limit": 51000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": "mediadrmserver",
+			"soft_memory_limit": 45000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": ".knight.btavrcp",
+			"soft_memory_limit": 34000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": "camerahalserver",
+			"soft_memory_limit": 145000,
+			"hard_memory_limit": 256000
+		},
+		{
+			"name": ".edgecvs_remote",
+			"soft_memory_limit": 145000,
+			"hard_memory_limit": 256000
+		},
+		{
+			"name": "azon.knight.ecs",
+			"soft_memory_limit": 25000,
+			"hard_memory_limit": 128000
+		},
+		{
+			"name": "amazon.theia.sm",
+			"soft_memory_limit": 100000,
+			"hard_memory_limit": 256000
+		}
+	]
+}

@@ -1,0 +1,43 @@
+{
+    "config_type": "ntt_fusion_processor",
+    "config_version": 3,
+    "prl_ntt_metadata_version_enabled": false,
+    "enable_verbose_logging": false,
+    "shadow_accept_tolerance_msec": 2000,
+    "ntt_modes": [
+        {
+            "ntt_mode": "CONVERSATION",
+            "primary_fusion_algorithm": {
+                "algorithm_name": "simple_and",
+                "config_file_path": "ntt.conv_simple_and.cfg.json"
+            },
+            "shadow_fusion_algorithms": [
+                {
+                    "algorithm_name": "window_avg",
+                    "config_file_path": "ntt.conv_window_avg.cfg.json"
+                }
+            ]
+        },
+        {
+            "ntt_mode": "PROMPT",
+            "primary_fusion_algorithm": {
+                "algorithm_name": "simple_and",
+                "config_file_path": "ntt.prompt_simple_and.cfg.json"
+            },
+            "shadow_fusion_algorithms": []
+        },
+        {
+            "ntt_mode": "VISUAL_ATTENTION",
+            "primary_fusion_algorithm": {
+                "algorithm_name": "simple_and",
+                "config_file_path": "ntt.visatt_simple_and.cfg.json"
+            },
+            "shadow_fusion_algorithms": [
+                {
+                    "algorithm_name": "window_avg",
+                    "config_file_path": "ntt.visatt_window_avg.cfg.json"
+                }
+            ]
+        }
+    ]
+}

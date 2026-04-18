@@ -1,0 +1,42 @@
+on post-fs-data
+    mkdir /data/misc/openthread 0770 system system
+    rm /data/misc/openthread/openthread.lock
+
+service openthread_ip_config /system/bin/openthread_ip_config.sh
+    user root
+    group root
+    oneshot
+    disabled
+    seclabel u:r:openthread_ip_config:s0
+
+service openthread_nat64_config /system/bin/openthread_nat64_config.sh
+    user root
+    group root
+    oneshot
+    disabled
+
+on boot
+    setprop openthread_ip_config.init.done 0
+
+on property:init.svc.otservice=running
+    write /proc/sys/net/ipv6/conf/all/forwarding 1
+    write /proc/sys/net/ipv6/conf/wlan0/forwarding 1
+    write /proc/sys/net/ipv6/conf/wlan0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/wlan0/accept_ra_rt_info_max_plen 64
+    write /proc/sys/net/ipv6/conf/wlan0/accept_redirects 1
+    write /proc/sys/net/ipv6/conf/wlan0/accept_source_route 1
+    write /proc/sys/net/ipv6/conf/ot0/forwarding 1
+    write /proc/sys/net/ipv6/conf/ot0/accept_ra 2
+    write /proc/sys/net/ipv6/conf/ot0/accept_ra_rt_info_max_plen 64
+    write /proc/sys/net/ipv6/conf/ot0/accept_redirects 1
+    write /proc/sys/net/ipv6/conf/ot0/accept_source_route 1
+    # Configure ip forwarding for NAT64
+    write /proc/sys/net/ipv4/ip_forward 1
+    write /proc/sys/net/ipv4/conf/default/forwarding 1
+
+on property:init.svc.otservice=running && property:openthread_ip_config.init.done=0
+    start openthread_ip_config
+    wait_for_prop init.svc.openthread_ip_config stopped
+    start openthread_nat64_config
+    wait_for_prop init.svc.openthread_nat64_config stopped
+    setprop openthread_ip_config.init.done 1

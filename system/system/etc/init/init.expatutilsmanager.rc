@@ -1,0 +1,11 @@
+# FOS6 service name cannot be over 16 characters
+service ExpatUtilsMgrD /system/bin/ExpatUtilsManagerD
+    class main
+    user system
+    group inet
+    disabled
+
+# There's a hidden dependency on spinet0. Without spinet0 up, the kernel won't
+# add a local ip route to localhost.[device], which leads to a grpc bind error.
+on property:sys.boot_completed=1 && property:spinet.spinet0.ready=1
+    start ExpatUtilsMgrD

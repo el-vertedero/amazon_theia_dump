@@ -1,0 +1,8 @@
+#!/system/bin/sh
+#
+# Script to start "smarthome_utility" on the device, which has a very rudimentary
+# shell.
+#
+base=/system
+export CLASSPATH=$base/framework/smarthome_utility.jar
+exec app_process $base/bin com.amazon.device.smarthome.test.utility.SmartHomeUtility "$@"

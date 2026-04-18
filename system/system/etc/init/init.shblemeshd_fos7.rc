@@ -1,0 +1,26 @@
+# FOS7 SmartHome BLE Mesh Daemon init.rc configuration
+
+on post-fs-data
+    mkdir /data/securedStorageLocation/SmartHome 0777 vendor_smarthome vendor_smarthome
+    mkdir /data/misc/smarthome_shared 0777 vendor_smarthome vendor_smarthome
+
+on property:sys.boot_completed=1
+    mkdir /data/securedStorageLocation/SmartHome 0777 vendor_smarthome vendor_smarthome
+    mkdir /data/misc/smarthome_shared 0777 vendor_smarthome vendor_smarthome
+    chown vendor_smarthome:vendor_smarthome /data/securedStorageLocation/SmartHome/PROT_BLE_MESH
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/CapabilityInstanceDatabase.db
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/BLEMeshAdapterDatabase.db
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/BLEMeshAdapterDatabase.db-journal
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/CIDDB.json
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/cdbVersion.txt
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/nextPeriodicSyncTime.txt
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_BLE_MESH/provisionerUuid.txt
+    chmod 777 /data/misc/smarthome_shared/mesh_cdb.json
+    start shblemeshd
+
+service shblemeshd /system/bin/SmartHomeBleMeshd
+    class main
+    user vendor_smarthome
+    group dbus vendor_amazon_gid
+    disabled

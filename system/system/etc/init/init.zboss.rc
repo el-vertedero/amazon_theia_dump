@@ -1,0 +1,4 @@
+on post-fs-data
+    mkdir /data/misc/zigbee 0770 system system
+    mkdir /data/misc/zigbee/zboss 0770 system system
+

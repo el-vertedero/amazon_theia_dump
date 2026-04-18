@@ -1,0 +1,53 @@
+# CSM SmartHome Zigbee Daemon init.rc configuration
+
+on post-fs-data
+   # Java ZigbeeAdapter
+    chmod 777 /data/securedStorageLocation/com.amazon.device.smarthome.adapters.zigbee
+    chmod 777 /data/securedStorageLocation/com.amazon.device.smarthome.adapters.zigbee/CapabilityInstanceDatabase.db
+    chmod 777 /data/securedStorageLocation/com.amazon.device.smarthome.adapters.zigbee/CapabilityInstanceDatabase.db-wal
+    chmod 777 /data/securedStorageLocation/com.amazon.device.smarthome.adapters.zigbee/CapabilityInstanceDatabase.db-shm
+   # Native ZigbeeAdapter
+    mkdir /data/securedStorageLocation/SmartHome 0777 vendor_smarthome vendor_smarthome
+    mkdir /data/securedStorageLocation/SmartHome/PROT_ZIGBEE
+    chown root system /data/securedStorageLocation/SmartHome/PROT_ZIGBEE
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_ZIGBEE
+    # MIGRATION
+    mkdir /data/securedStorageLocation/original 0777 smarthome smarthome
+    chown root system /data/securedStorageLocation/original
+    chmod 777 /data/securedStorageLocation/original
+    mkdir /data/securedStorageLocation/migrated 0777 smarthome smarthome
+    chown root system /data/securedStorageLocation/migrated
+    chmod 777 /data/securedStorageLocation/migrated/
+    mkdir /data/securedStorageLocation/original/SmartHome 0777 smarthome smarthome
+    chown root system /data/securedStorageLocation/original/SmartHome
+    chmod 777 /data/securedStorageLocation/original/SmartHome
+    mkdir /data/securedStorageLocation/migrated/SmartHome 0777 smarthome smarthome
+    chown root system /data/securedStorageLocation/migrated/SmartHome
+    chmod 777 /data/securedStorageLocation/migrated/SmartHome
+    # Zigbee Adapter
+    mkdir /data/securedStorageLocation/original/SmartHome/com.amazon.device.smarthome.adapters.zigbee 0777 smarthome smarthome
+    chown root system /data/securedStorageLocation/original/SmartHome/com.amazon.device.smarthome.adapters.zigbee
+    chmod 777 /data/securedStorageLocation/original/SmartHome/com.amazon.device.smarthome.adapters.zigbee
+    mkdir /data/securedStorageLocation/migrated/SmartHome/PROT_ZIGBEE 0777 smarthome smarthome
+    chown root system data/securedStorageLocation/migrated/SmartHome/PROT_ZIGBEE
+    chmod 777 data/securedStorageLocation/migrated/SmartHome/PROT_ZIGBEE
+
+on property:sys.boot_completed=1
+    start smarthomezigbeemigrator
+
+on property:internal.zigbee.sh_migrate=success && property:vendor.zigbee.migration_manager_finished=True
+    chmod 777 /data/securedStorageLocation/SmartHome/PROT_ZIGBEE/CapabilityInstanceDatabase.db
+    start smarthomezigbeed
+
+# TODO:DEE-353659 remove unused group amz_group from rc file
+service smarthomezigbeed /system/bin/SmartHomeZigbeeAdapterd
+    class main
+    user vendor_smarthome
+    group system vendor_amazon_gid vendor_aipc vendor_zigbee vendor_ace_group vendor_ace_kv_storage dbus inet amz_group
+    disabled
+
+service smarthomezigbeemigrator /system/bin/SmartHomeZigbeeMigrator
+    class main
+    user root
+    group system amz_group
+    oneshot

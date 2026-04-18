@@ -1,0 +1,7 @@
+{
+  "config_type": "cv_simple_config",
+  "config_version": 1,
+  "accept_threshold": 0.5,
+  "score_type": "ACTIVE_SPEAKER",
+  "enable_verbose_logging": false
+}

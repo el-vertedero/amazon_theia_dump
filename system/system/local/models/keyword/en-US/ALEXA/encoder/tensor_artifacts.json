@@ -1,0 +1,11 @@
+{
+  "tensor_artifacts": [
+        {
+            "name" : "encoder_output",
+            "format": "in-memory",
+            "protocol" : "runtime"
+        }
+    ],
+    "object_type_name": "tensor_artifacts_list_config",
+    "object_type_version": 1
+}

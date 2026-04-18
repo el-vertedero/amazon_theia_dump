@@ -1,0 +1,71 @@
+on post-fs-data
+    # create directory for aipc
+    mkdir /dev/aipc 2770 system vendor_aipc
+
+    # kvs
+    mkdir /data/ace 0770 vendor_ace_group vendor_ace_group
+    mkdir /data/ace/kvstorage 0770 vendor_ace_kv_storage vendor_ace_kv_storage
+
+    # ACS metrics manager
+    mkdir /dev/metricd 2777 system vendor_ace_group
+
+    # DeviceClientMetricsNative
+    mkdir /data/dcm 0751 system system
+    mkdir /data/dcm/metrics 0751 system system
+
+    # Disable connect to shmd depending on environment variable
+    export SHMLIB_DISABLE_ONLOAD = true
+
+    # Create minerva directories
+    mkdir /data/minerva 0751 system system
+    mkdir /data/minerva/metrics 0751 system system
+
+on boot
+    start kvs_util
+
+on property:kvs_init_completed=1
+    start minerva_service
+
+service kvs_util /system/bin/kvs_util
+    user vendor_ace_kv_storage
+    group vendor_ace_kv_storage vendor_ace_group
+    oneshot
+    disabled
+
+service ace_eventmgr /system/bin/ace_eventmgr
+    setenv SHMLIB_DISABLE_ONLOAD true
+    class core
+    user vendor_ace_eventmgr
+    group vendor_aipc
+    disabled
+
+service wifisvc /system/bin/wifisvc
+    class late_start
+    user root
+    group wifi system vendor_aipc inet vendor_ace_kv_storage vendor_ace_group net_admin net_raw
+    disabled
+
+service ace_powerd /system/bin/ace_powerd
+    class main
+    user vendor_ace_powerd
+    group system vendor_aipc vendor_ace_kv_storage vendor_ace_group vendor_ace_eventmgr
+    disabled
+
+service ace_metricd /system/bin/ace_metric_daemon
+    setenv SHMLIB_DISABLE_ONLOAD true
+    user system
+    group system dbus vendor_ace_group vendor_ace_kv_storage inet vendor_ace_maplite
+    disabled
+
+service acedcm /system/bin/dcm
+    setenv SHMLIB_DISABLE_ONLOAD true
+    user system
+    group system dbus vendor_aipc vendor_ace_group vendor_ace_kv_storage inet vendor_ace_maplite
+    disabled
+
+service minerva_service /system/bin/minerva_service
+    class main
+    user system
+    group system dbus vendor_aipc vendor_ace_group vendor_ace_kv_storage inet vendor_ace_maplite
+    disabled
+

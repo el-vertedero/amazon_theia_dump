@@ -1,0 +1,60 @@
+{
+    "name": "ALEXA",
+    "classifier": {
+      "type": "moving-average-max-pool",
+      "window-size": 1
+    },
+    "scorers": ["ww_alexa"],
+    "spotter": {
+      "classification-thresholds": {
+        "accept-threshold": 0.974,
+        "notify-threshold": 0.250,
+        "overrides": [
+          {
+            "accept-threshold": 0.888,
+            "clientProperties": [
+              {
+                "equals": 1,
+                "name": "AlarmState"
+              }
+            ]
+          },
+          {
+            "accept-threshold": 0.949,
+            "clientProperties": [
+              {
+                "equals": 1,
+                "name": "AudioPlayerState"
+              }
+            ]
+          },
+          {
+            "accept-threshold": 0.949,
+            "clientProperties": [
+              {
+                "equals": 1,
+                "name": "audio_playback"
+              }
+            ]
+          }
+        ]
+      },
+      "word-component-array": [
+        {
+          "scorer-index": 0,
+          "scorer-output-component": {
+            "name": "alexa/posteriors",
+            "posterior-type": "decoding-scores"
+          },
+          "keyword-start-scorer-index": 0,
+          "keyword-end-scorer-index": 1,
+          "keyword-start-end-component": {
+            "name": "alexa/start_end",
+            "posterior-type": "time-alignment-scores"
+          }
+        }
+      ],
+      "keyword-feature-window-length": 100,
+      "lock-period": 132
+    }
+}

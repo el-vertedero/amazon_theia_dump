@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ com.amazon.ace.power.xml
+  ~
+  ~ Copyright (c) 2021 - 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~
+  ~ PROPRIETARY/CONFIDENTIAL
+  ~
+  ~ Use is subject to license terms.
+  -->
+
+<permissions>
+   <assign-permission name="android.permission.WAKE_LOCK" uid="vendor_ace_powerd" />
+   <assign-permission name="android.permission.REBOOT" uid="vendor_ace_powerd" />
+   <assign-permission name="android.permission.UPDATE_DEVICE_STATS" uid="vendor_ace_powerd" />
+</permissions>

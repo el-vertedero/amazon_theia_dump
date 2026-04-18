@@ -1,0 +1,175 @@
+#line 1 "device/amazon/common/sepolicy/amazon_hal/devicetype/property_contexts"
+#
+# Copyright (c) 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+ro.product.config.type u:object_r:devicetype_prop:s0
+
+#line 1 "device/amazon/common/sepolicy/fireos/property_contexts"
+#
+# Copyright (c) 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+ro.build.lab126.        u:object_r:kats_build_prop:s0
+
+#line 1 "fireos/base/features/AmazonActivityManager/sepolicy/property_contexts"
+#
+# Copyright (c) 2023 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+persist.input.prewarm.         u:object_r:input_prewarm_enable_prop:s0
+
+#line 1 "fireos/base/features/AmazonLogd/sepolicy_old/property_contexts"
+#
+# Copyright (c) 2018 - 2021 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+vpartition.             u:object_r:logd_prop:s0
+logd.init.              u:object_r:logd_prop:s0
+
+#line 1 "fireos/base/features/AmazonNetworkManager/sepolicy/property_contexts"
+#
+# Copyright (c) 2020 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+# wifi_prop
+persist.wifi.      u:object_r:wifi_prop:s0
+
+#line 1 "fireos/base/features/AmazonWifiManager/sepolicy/property_contexts"
+#
+# Copyright (c) 2021-2023 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+# Host AP properties
+vendor.sys.hostap.support u:object_r:exported_system_prop:s0 exact string
+vendor.wifi.wlan0.screen_status u:object_r:exported_system_prop:s0 exact string
+persist.wifi.bridged.log_level u:object_r:exported_system_prop:s0 exact string
+
+#line 1 "fireos/base/features/BspDiagService/sepolicy/property_contexts"
+# Copyright (c) 2019 - 2022 Amazon.com, Inc. or its affiliates.  All rights reserved.
+#
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+
+sys.amzn_bsp_diag.emmc_lifetime         u:object_r:amzn_emmc_lifetime_prop:s0
+persist.sys.amzn_bsp_diag.      u:object_r:system_prop:s0
+sys.amzn_bsp_diag.disk_write    u:object_r:amzn_emmc_diskstat_write_prop:s0
+
+#line 1 "fireos/base/features/TimeService/sepolicy/property_contexts"
+#
+# Copyright (c) 2020 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+logd.time.update u:object_r:logd_prop:s0 exact string
+
+#line 1 "fireos/base/features/AmazonAudioManager/sepolicy/property_contexts"
+#
+# Copyright (c) 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+# set property context for max volume steps ro property for each stream
+# media and voice_call property context are set by AOSP
+ro.config.system_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.ring_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.alarm_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.notification_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.bt_sco_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.system_enforced_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.dtmf_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.tts_vol_steps u:object_r:exported2_config_prop:s0 exact int
+ro.config.accessibility_vol_steps u:object_r:exported2_config_prop:s0 exact int
+
+# set property context for default stream volume
+# system, media and alarm property context are set by AOSP
+ro.config.voice_call_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.ring_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.notification_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.bt_sco_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.system_enforced_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.dtmf_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.tts_vol_default u:object_r:exported2_config_prop:s0 exact int
+ro.config.accessibility_vol_default u:object_r:exported2_config_prop:s0 exact int
+
+#line 1 "fireos/base/features/AmazonFosFlags/sepolicy/property_contexts"
+#
+# Copyright (c) 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+amazon.fos_flags.      u:object_r:shell_prop:s0
+
+#line 1 "fireos/base/features/FactoryResetWhitelist/sepolicy/property_contexts"
+#
+# Copyright (c) 2022 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+
+backup_whitelist.status u:object_r:system_prop:s0
+
+#line 1 "vendor/amazon/spinet/sepolicy/fos7/property_contexts"
+spinet.spinet0.ready                    u:object_r:spinet_prop:s0
+
+#line 1 "vendor/amazon/perfmonitor/sepolicy/fireos/property_contexts"
+perfrecoveryd.                  u:object_r:perfrecovery_config_prop:s0
+perfmonitor.config.override     u:object_r:perfmonitord_config_prop:s0
+
+#line 1 "fireos/acs/sdk/sepolicy/ace/property_contexts"
+#
+# Copyright (c) 2021 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+kvs_init_completed      u:object_r:system_prop:s0
+ctl.wifisvc             u:object_r:ctl_wifisvc_prop:s0
+ctl.ace_eventmgr        u:object_r:ctl_ace_eventmgr_prop:s0
+ctl.ace_powerd          u:object_r:ctl_ace_powerd_prop:s0
+ctl.acedcm              u:object_r:ctl_acedcm_prop:s0
+ctl.ace_metricd         u:object_r:ctl_ace_metricd_prop:s0
+
+#line 1 "vendor/amazon/echo/features/GrpcBootSync/sepolicy/property_contexts"
+# properties for access by GrpcBootSync component
+companion.version.number         u:object_r:system_prop:s0
+companion.build.number         u:object_r:system_prop:s0
+
+#line 1 "vendor/dsr/zigbee/platform/common/sepolicy/fireos/openthread/property_contexts"
+openthread. u:object_r:openthread_prop:s0
+
+
+#line 1 "vendor/ring/halo/halo-provision/sepolicy/property_contexts"
+######################
+# property contexts
+#
+vendor.halo.prov.trigger           u:object_r:exported_system_prop:s0
+
+#line 1 "device/amazon/common/sepolicy/halo/property_contexts"
+######################
+# property contexts
+#
+vendor.halo.           u:object_r:halo_prop:s0
+persist.vendor.halo.   u:object_r:halo_prop:s0
+
+#For halo service controller to trigger halo service
+vendor.halo.control.service   u:object_r:exported_system_prop:s0
+
+#line 1 "fireos/base/features/SmartHomeNativeSystemService/sepolicy/common/property_contexts"
+#
+# Copyright (c) 2022 - 2023 Amazon.com, Inc. or its affiliates.  All rights reserved.
+# PROPRIETARY/CONFIDENTIAL.  USE IS SUBJECT TO LICENSE TERMS.
+#
+persist.dice.proactiveDetection u:object_r:dice_prop:s0
+internal.zigbee.sh_migrate      u:object_r:internal_zigbee_sh_migrate:s0
+
+#line 1 "device/amazon/mt8183/sepolicy/sim/property_contexts"
+user.alexaPremiumDefault          u:object_r:amzn_sim_prop:s0
+
+#line 1 "device/amazon/theia/theia/sepolicy/ahe_firewall/property_contexts"
+alexa.hybrid.client.port                    u:object_r:config_prop:s0
+alexa.hybrid.client.uid                     u:object_r:config_prop:s0
+alexa.hybrid.davscap.port                   u:object_r:config_prop:s0
+alexa.hybrid.davscap.uid                    u:object_r:config_prop:s0
+alexa.hybrid.firewall_config_ready          u:object_r:config_prop:s0
+alexa.hybrid.skillcontainer.ingestion_port  u:object_r:config_prop:s0
+alexa.hybrid.skillcontainer.server_port     u:object_r:config_prop:s0
+alexa.hybrid.skillcontainer.uid             u:object_r:config_prop:s0
+

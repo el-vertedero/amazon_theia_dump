@@ -1,0 +1,18 @@
+on post-fs-data
+    mkdir /data/misc/blemesh 776 vendor_blemesh vendor_blemesh
+    chown vendor_blemesh:vendor_blemesh /data/misc/blemesh
+    chmod 776 /data/misc/blemesh/mesh_cdb.json
+    chmod 776 /data/misc/blemesh/mesh_cdb.json.tmp
+    chmod 776 /data/misc/blemesh/mesh_cdb_backup.json
+    chmod 776 /data/misc/blemesh/mesh_cdb_backup.json.tmp
+    chmod 776 /data/misc/blemesh/mesh_pdb.json
+    chmod 776 /data/misc/blemesh/mesh_pdb.json.tmp
+
+on property:sys.boot_completed=1
+    start meshmgrservice
+
+service meshmgrservice /system/bin/meshmgrservice
+    class main
+    user vendor_blemesh
+    group vendor_blemesh ace_kvstore ace_group
+    seclabel u:r:meshmgrservice:s0

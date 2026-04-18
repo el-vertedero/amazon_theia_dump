@@ -1,0 +1,7 @@
+service backup_whitelist /system/bin/backup_whitelist
+    capabilities CHOWN
+    class main
+    user system
+    group root system cache vendor_amazon_gid
+    disabled
+    oneshot

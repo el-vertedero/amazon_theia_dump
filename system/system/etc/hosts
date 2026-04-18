@@ -1,0 +1,4 @@
+127.0.0.1       localhost
+169.254.0.1     localhost.theia
+169.254.0.2     localhost.mopac
+::1             ip6-localhost

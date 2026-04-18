@@ -1,0 +1,10 @@
+on boot
+    mkdir /data/smpc 0700 smpc smpc
+
+# Start smpcd
+on post-fs-data
+    start smpcd
+
+service smpcd /system/bin/smpcd
+    user smpc
+    group system dbus inet vendor_amazon_gid

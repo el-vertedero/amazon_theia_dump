@@ -1,0 +1,9 @@
+
+#
+# ADDITIONAL PRODUCT PROPERTIES
+#
+persist.sys.recovery.batt_level=0
+persist.bluetooth.enablenewavrcp=false
+persist.bluetooth.disableabsvol=true
+ro.product.config.type=AIPK7MM90V7TB
+persist.adbnet.devpath=/devices/platform/mt_usb/musb-hdrc.0.auto/gadget/net

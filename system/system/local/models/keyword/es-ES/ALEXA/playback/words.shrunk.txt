@@ -1,0 +1,5 @@
+<eps> 0
+ALEXA 169
+STOP 184
+_BG_WORD_[NS] 184
+_BG_WORD_[S] 184

@@ -1,0 +1,37 @@
+{
+  "awake": {
+    "rules": [
+      {
+        "name": "ALEXA",
+        "next": "awake"
+      },
+      {
+        "name": "STOP",
+        "next": "sleep"
+      },
+      {
+        "name": "HEY_DISNEY",
+        "next": "awake"
+      }
+    ],
+    "timeout": {
+      "duration": 175,
+      "next": "sleep"
+    }
+  },
+  "initial": "sleep",
+  "object_type_name": "keyword-spotter-machine-config",
+  "object_type_version": 1,
+  "sleep": {
+    "rules": [
+      {
+        "name": "ALEXA",
+        "next": "awake"
+      },
+      {
+        "name": "HEY_DISNEY",
+        "next": "awake"
+      }
+    ]
+  }
+}
