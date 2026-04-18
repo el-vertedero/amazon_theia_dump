@@ -1,0 +1,2 @@
+system/system/priv-app/com.amazon.ambienthome/com.amazon.ambienthome.apk.zst
+system/system/priv-app/com.amazon.avod/com.amazon.avod.apk.zst

@@ -1,0 +1,14 @@
+# theia-user 9 PS7571.5162N 0033857743360 amz-p,release-keys
+- manufacturer: amazon
+- platform: mt8183
+- codename: theia
+- flavor: theia-user
+- release: 9
+- id: PS7571.5162N
+- incremental: 0033857743492
+- tags: amz-p,release-keys
+- fingerprint: Amazon/theia/theia:9/PS7571.5162N/0033857743360:user/amz-p,release-keys
+- is_ab: false
+- brand: Amazon
+- branch: theia-user-9-PS7571.5162N-0033857743360-amz-p,release-keys
+- repo: amazon_theia_dump
